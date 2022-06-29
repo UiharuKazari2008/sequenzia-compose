@@ -7,4 +7,10 @@ This is a simple "turn-key" solution for the Kanmi x Sequenzia system. This is m
 
 <img width="1059" src="https://user-images.githubusercontent.com/15165770/176510591-c0dd6320-eca8-44ec-bb99-fbcb20763b07.png" >
 
-## [Click here for installation and setup guide](https://github.com/UiharuKazari2008/sequenzia-compose/wiki/Installation)
+### [Click here for installation and setup guide](https://github.com/UiharuKazari2008/sequenzia-compose/wiki/Installation)
+
+## Reporting Issues
+Sequenzia is not a single project or system but multiple separate projects.
+* **Issues related to the installation proccess or possibly related to docker should be reported here**
+* Filesystem, backend, and discord should be reported [in the kanmi project](https://github.com/UiharuKazari2008/kanmi/issues)
+* Web interface or its APIs should be reported [in the sequenzia project](https://github.com/UiharuKazari2008/sequenzia/issues)
