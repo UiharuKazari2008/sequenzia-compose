@@ -4,7 +4,7 @@
   "mq_discord_out": "outbox.discord",
   "mq_fileworker_in": "inbox.fileworker.DOCKER-A.local",
   "mq_fileworker_cds": "inbox.fileworker",
-  "fw_path": "./web-upload/",
+  "fw_path": "/data/.web-upload/",
   "upload_folder": "/data/.web-upload/",
   "fw_serve": "/data/download/",
   "tmp_folder": "./tmp/",

@@ -30,7 +30,7 @@ services:
       context: ./kanmi-discord-authware
     environment:
       SETUP_TYPE: storage
-      SETUP_SERVERID: 991507209546633236
+      SETUP_SERVERID: 991736826568134797
       WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
       WAIT_HOSTS_TIMEOUT: 300
       WAIT_SLEEP_INTERVAL: 30

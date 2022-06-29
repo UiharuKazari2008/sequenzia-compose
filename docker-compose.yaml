@@ -117,7 +117,7 @@ services:
         aliases:
           - sequenzia.acr
     volumes:
-      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+      - ./common/config/user-config.json:/across/sequenzia-web/user-config.json:ro
       - ./common/data/:/data/
 
   admin-terminal:
