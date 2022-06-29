@@ -2,3 +2,4 @@
 common/admin-home
 common/data/upload/*
 common/data/download/*
+common/config/user-config.json
