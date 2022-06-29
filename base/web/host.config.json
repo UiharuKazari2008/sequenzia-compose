@@ -1,0 +1,17 @@
+{
+  "system_name": "DOCKER-A",
+  "sql_host": "sql.backend.acr",
+  "mq_host": "mq.backend.acr",
+  "log_host" : [],
+  "sql_database": "kanmi_system",
+  "sql_user": "kanmi",
+  "sql_pass": "=9R3hxEhZ?9B8bf#+2d4",
+  "mq_user": "kanmi",
+  "mq_pass": "t2QpQTmgP32nWThE3eZ4",
+  "mq_inbox" : "inbox.sequenzia",
+  "discord_id": "",
+  "discord_secret": "",
+  "discord_redirect_base": "http://127.0.0.1:3000",
+  "cookie_secret": "DockerKanmi@CHANGETHISDAMNSECRET",
+  "use_secure_cookie": false
+}

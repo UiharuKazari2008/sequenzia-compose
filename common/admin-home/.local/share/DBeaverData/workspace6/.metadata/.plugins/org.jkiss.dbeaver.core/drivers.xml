@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<drivers>
+	<provider id="athena"/>
+	<provider id="databricks"/>
+	<provider id="clickhouse"/>
+	<provider id="datavirtuality"/>
+	<provider id="db2"/>
+	<provider id="db2_zos"/>
+	<provider id="db2_i"/>
+	<provider id="denodo"/>
+	<provider id="elasticsearch"/>
+	<provider id="exasol"/>
+	<provider id="jaybird"/>
+	<provider id="generic"/>
+	<provider id="bigquery"/>
+	<provider id="google_spanner"/>
+	<provider id="greenplum"/>
+	<provider id="h2"/>
+	<provider id="h2gis"/>
+	<provider id="hana"/>
+	<provider id="hive"/>
+	<provider id="kognitio"/>
+	<provider id="sqlserver"/>
+	<provider id="mssql"/>
+	<provider id="mysql">
+		<driver id="mysql8" categories="sql" name="MySQL" class="com.mysql.cj.jdbc.Driver" url="jdbc:mysql://{host}[:{port}]/[{database}]" port="3306" defaultUser="root" description="Driver for MySQL 8 and later" custom="false">
+			<library type="jar" path="maven:/mysql:mysql-connector-java:RELEASE" custom="false" version="8.0.17">
+				<file id="mysql:mysql-connector-java" version="8.0.17" path="${home}/.local/share/DBeaverData/drivers/maven/maven-central/mysql/mysql-connector-java-8.0.17.jar"/>
+				<file id="com.google.protobuf:protobuf-java" version="3.6.1" path="${home}/.local/share/DBeaverData/drivers/maven/maven-central/com.google.protobuf/protobuf-java-3.6.1.jar"/>
+			</library>
+		</driver>
+	</provider>
+	<provider id="oceanbase"/>
+	<provider id="ocient"/>
+	<provider id="open-distro-elasticsearch"/>
+	<provider id="oracle"/>
+	<provider id="postgresql"/>
+	<provider id="snowflake"/>
+	<provider id="sqlite"/>
+	<provider id="vertica"/>
+</drivers>

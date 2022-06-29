@@ -1,0 +1,9 @@
+{
+  "base_url": "http://localhost:3000/",
+  "site_name": "Sequenzia",
+  "company_name": "Academy City Research",
+  "company_email": "sequenzia@acr.moe",
+  "support_lines" : [
+    "Discord: Yukimi Kazari#9854"
+  ]
+}

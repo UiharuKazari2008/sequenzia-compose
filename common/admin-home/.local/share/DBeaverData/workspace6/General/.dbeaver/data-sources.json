@@ -1,0 +1,38 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-181ad1aad0a-52af7f2ce7c4bbf4": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "kanmi_system",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "sql.backend.acr",
+				"port": "3306",
+				"database": "kanmi_system",
+				"url": "jdbc:mysql://sql.backend.acr:3306/kanmi_system",
+				"type": "dev",
+				"properties": {
+					"connectTimeout": "20000",
+					"rewriteBatchedStatements": "true",
+					"enabledTLSProtocols": "TLSv1,TLSv1.1,TLSv1.2",
+					"allowPublicKeyRetrieval": "true"
+				},
+				"auth-model": "native",
+				"handlers": {}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"auto-close-transactions": false
+		}
+	}
+}

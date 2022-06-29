@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+	<item id="MySQLPrivilegesEditor">
+		<column name="Privilege" visible="true" order="0" width="167"/>
+		<column name="Enabled" visible="true" order="1" width="100"/>
+		<column name="Description" visible="true" order="2" width="1210"/>
+	</item>
+	<item id="NodeList/MySQLTableColumn">
+		<column name="Column Name" visible="true" order="0" width="120"/>
+		<column name="#" visible="true" order="1" width="100"/>
+		<column name="Data Type" visible="true" order="2" width="100"/>
+		<column name="Not Null" visible="true" order="3" width="100"/>
+		<column name="Auto Increment" visible="true" order="4" width="131"/>
+		<column name="Key" visible="true" order="5" width="100"/>
+		<column name="Default" visible="true" order="6" width="154"/>
+		<column name="Extra" visible="true" order="7" width="151"/>
+		<column name="Expression" visible="true" order="8" width="100"/>
+		<column name="Comment" visible="true" order="9" width="100"/>
+	</item>
+	<item id="projectExplorer">
+		<column name="Name" visible="true" order="0" width="245"/>
+		<column name="DataSource" visible="true" order="1" width="181"/>
+	</item>
+</items>

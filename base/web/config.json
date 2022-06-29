@@ -1,0 +1,18 @@
+{
+  "http_port": 3000,
+  "mq_discord_in": "inbox.discord",
+  "mq_discord_out": "outbox.discord",
+  "mq_fileworker_in": "inbox.fileworker.DOCKER-A.local",
+  "mq_fileworker_cds": "inbox.fileworker",
+  "fw_path": "./web-upload/",
+  "upload_folder": "/data/.web-upload/",
+  "fw_serve": "/data/download/",
+  "tmp_folder": "./tmp/",
+  "enable_polyfill_proxy_request": true,
+  "bypass_cds_check": true,
+  "enable_maintenance": true,
+  "web_applications": {
+  },
+  "ext_applications": {
+  }
+}

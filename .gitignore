@@ -1,2 +1,4 @@
 .idea/
 common/admin-home
+common/data/upload/*
+common/data/download/*

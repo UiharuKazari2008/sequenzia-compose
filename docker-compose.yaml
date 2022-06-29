@@ -1,0 +1,150 @@
+services:
+  kanmi-database:
+    image: mysql:8-oracle
+    container_name: kanmi-database
+    environment:
+      MYSQL_ROOT_PASSWORD: Km9@v-A6F%FdSt!6ja8+
+    networks:
+      kanmi_system:
+        aliases:
+          - sql.backend.acr
+    volumes:
+      - ./base/base_v20.sql:/docker-entrypoint-initdb.d/setup.sql
+      - db_data:/var/lib/mysql
+  kanmi-mq:
+    image: rabbitmq:3-management-alpine
+    container_name: kanmi-mq
+    environment:
+      RABBITMQ_DEFAULT_USER: kanmi
+      RABBITMQ_DEFAULT_PASS: t2QpQTmgP32nWThE3eZ4
+    volumes:
+      - mq_data:/var/lib/rabbitmq/
+      - ./log/mq/:/var/log/rabbitmq
+    networks:
+      kanmi_system:
+        aliases:
+          - mq.backend.acr
+
+  kanni-authware:
+    build:
+      context: ./kanmi-discord-authware
+    environment:
+      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
+      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_SLEEP_INTERVAL: 30
+      WAIT_HOST_CONNECT_TIMEOUT: 30
+    networks:
+      kanmi_system:
+        aliases:
+          - authware.kanmi.acr
+    depends_on:
+      - kanmi-database
+      - kanmi-mq
+    volumes:
+      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+
+  kanni-framework:
+    build:
+      context: ./kanmi-discord-framework
+    environment:
+      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
+      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_SLEEP_INTERVAL: 30
+      WAIT_HOST_CONNECT_TIMEOUT: 30
+    networks:
+      kanmi_system:
+        aliases:
+          - framework.kanmi.acr
+    depends_on:
+      - kanmi-database
+      - kanmi-mq
+      - kanni-authware
+    volumes:
+      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+
+  kanni-fileworker:
+    build:
+      context: ./kanmi-discord-fileworker
+    environment:
+      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
+      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_SLEEP_INTERVAL: 30
+      WAIT_HOST_CONNECT_TIMEOUT: 30
+    networks:
+      kanmi_system:
+        aliases:
+          - fileworker.kanmi.acr
+    depends_on:
+      - kanmi-database
+      - kanmi-mq
+      - kanni-authware
+    volumes:
+      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+      - ./common/data/:/data/
+
+  #kanni-fileworker-share:
+  #    image: joebiellik/samba-server
+  #    environment:
+  #      USERNAME: admin
+  #      PASSWORD: admin
+  #    volumes:
+  #      - ./common/config/smb.conf:/etc/samba/smb.conf
+  #      - ./common/data/upload/:/mnt/upload
+  #      - ./common/data/download/:/mnt/download
+  #    ports:
+  #      - "137:137/udp"
+  #      - "138:138/udp"
+  #      - "139:139/tcp"
+  #      - "445:445/tcp"
+  #    networks:
+  #      kanmi_system:
+  #        aliases:
+  #          - filesystem.kanmi.acr
+
+  sequenzia-web:
+    build:
+      context: ./sequenzia-web
+    environment:
+      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
+      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_SLEEP_INTERVAL: 30
+      WAIT_HOST_CONNECT_TIMEOUT: 30
+    container_name: sequenzia-web
+    ports:
+      - 3000:3000
+    networks:
+      kanmi_system:
+        aliases:
+          - sequenzia.acr
+    volumes:
+      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+      - ./common/data/:/data/
+
+  admin-terminal:
+    build:
+      context: ./administrator
+    container_name: kanmi-admin
+    environment:
+      USER: admin
+      PASSWORD: admin
+      RESOLUTION: 1920x1080
+    ports:
+      - 6080:80
+    volumes:
+      - ./common/admin-home/:/home/admin
+    networks:
+      kanmi_system:
+        aliases:
+          - manager.backend.acr
+
+networks:
+  kanmi_system:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.85.0/24
+    driver_opts:
+      com.docker.networks.bridge.name: br-kanmi_system
+volumes:
+  db_data:
+  mq_data:

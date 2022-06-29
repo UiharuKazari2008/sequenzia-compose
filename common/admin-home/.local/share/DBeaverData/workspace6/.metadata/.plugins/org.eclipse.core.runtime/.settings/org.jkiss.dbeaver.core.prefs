@@ -1,0 +1,6 @@
+driver.selector.orderBy=score
+eclipse.preferences.version=1
+sample.database.canceled=true
+tipOfTheDayInitializer.notFirstRun=true
+ui.auto.update.check.time=1656466609013
+ui.show.tip.of.the.day.on.startup=false
