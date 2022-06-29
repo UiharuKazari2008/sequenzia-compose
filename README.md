@@ -126,7 +126,8 @@ Once you see AuthWare running you can shutdown and then run it normally
 ```shell
 docker compose up
 ```
-You should be able to login from http://localhost:3000 or use http://localhost:3000/discord/impersonate/YOUR_USER_ID
+* You should be able to login from http://localhost:3000 or use http://localhost:3000/discord/impersonate/YOUR_USER_ID
+* Add `-d` to run in the background
 
 ## Closeing
 * Your FileWorker Upload folder is /common/data/upload
