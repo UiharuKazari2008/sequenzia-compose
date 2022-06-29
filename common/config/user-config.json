@@ -1,0 +1,11 @@
+{
+  "Discord_Key": "",
+  "Authware_Key": "",
+  "DiscordHomeGuild": "",
+  "discord_id": "",
+  "discord_secret": "",
+  "discord_redirect_base": "http://127.0.0.1:3000",
+  "cookie_secret": "DockerKanmi@CHANGETHISDAMNSECRET",
+  "enable_impersonation": true,
+  "use_secure_cookie": false
+}
