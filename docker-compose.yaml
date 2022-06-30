@@ -17,7 +17,6 @@ services:
       RABBITMQ_DEFAULT_PASS: t2QpQTmgP32nWThE3eZ4
     volumes:
       - mq_data:/var/lib/rabbitmq/
-      - ./log/mq/:/var/log/rabbitmq
     networks:
       kanmi_system:
         aliases:
