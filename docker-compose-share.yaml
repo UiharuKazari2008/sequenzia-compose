@@ -1,0 +1,19 @@
+services:
+  kanni-fileworker-share:
+      image: joebiellik/samba-server
+      environment:
+        USERNAME: admin
+        PASSWORD: admin
+      volumes:
+        - ./common/config/smb.conf:/etc/samba/smb.conf
+        - ./common/data/upload/:/mnt/upload
+        - ./common/data/download/:/mnt/download
+      ports:
+        - "137:137/udp"
+        - "138:138/udp"
+        - "139:139/tcp"
+        - "445:445/tcp"
+      networks:
+        kanmi_system:
+          aliases:
+            - filesystem.kanmi.acr
