@@ -1,13 +1,13 @@
-2022-06-29 18:58:52.261 - Create display
-2022-06-29 18:58:54.098 - DBeaver 22.1.1.202206261508 is starting
-2022-06-29 18:58:54.238 - OS: Linux 5.10.104-linuxkit (amd64)
-2022-06-29 18:58:54.303 - Java version: 11.0.12 by Eclipse Foundation (64bit)
-2022-06-29 18:58:54.308 - Install path: '/usr/share/dbeaver-ce'
-2022-06-29 18:58:54.324 - Instance path: 'file:/home/admin/.local/share/DBeaverData/workspace6/'
-2022-06-29 18:58:54.339 - Memory available 101Mb/1024Mb
+2022-06-30 21:40:11.189 - Create display
+2022-06-30 21:40:11.358 - DBeaver 22.1.1.202206261508 is starting
+2022-06-30 21:40:11.361 - OS: Linux 5.10.104-linuxkit (amd64)
+2022-06-30 21:40:11.363 - Java version: 11.0.12 by Eclipse Foundation (64bit)
+2022-06-30 21:40:11.365 - Install path: '/usr/share/dbeaver-ce'
+2022-06-30 21:40:11.367 - Instance path: 'file:/home/admin/.local/share/DBeaverData/workspace6/'
+2022-06-30 21:40:11.368 - Memory available 77Mb/1024Mb
 > Start DBeaver UI Editors - Base [org.jkiss.dbeaver.ui.editors.base 1.0.84.202206261508]
-2022-06-29 18:58:54.483 - Starting RMI server at 53073
-2022-06-29 18:58:55.032 - Run workbench
+2022-06-30 21:40:11.392 - Starting RMI server at 24582
+2022-06-30 21:40:11.453 - Run workbench
 > Start Eclipse e4 Workbench SWT [org.eclipse.e4.ui.workbench.swt 0.16.400.v20220222-1128]
 > Start Eclipse Application Services [org.eclipse.e4.core.services 2.3.100.v20210910-0640]
 > Start Eclipse UI Application Services [org.eclipse.e4.ui.services 1.5.0.v20210115-1333]
@@ -19,15 +19,14 @@
 > Start Eclipse Dependency Injection Extensions [org.eclipse.e4.core.di.extensions 0.17.100.v20210910-0640]
 > Start Eclipse CSS SWT Support [org.eclipse.e4.ui.css.swt 0.14.400.v20211026-1534]
 > Start DBeaver UI [org.jkiss.dbeaver.ui 5.1.99.202206261508]
-> Start Eclipse SDK Themes [org.eclipse.ui.themes 1.2.1700.v20220210-1145]
-2022-06-29 18:58:59.142 - Configure workbench window
+2022-06-30 21:40:13.072 - Configure workbench window
 > Start Help System Core [org.eclipse.help 3.9.100.v20210721-0601]
-2022-06-29 18:58:59.447 - Create actions
-2022-06-29 18:58:59.465 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
-2022-06-29 18:58:59.470 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
-2022-06-29 18:58:59.474 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
-2022-06-29 18:59:01.591 - Initialize workbench window
-2022-06-29 18:59:01.608 - Finish initialization
+2022-06-30 21:40:13.195 - Create actions
+2022-06-30 21:40:13.203 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
+2022-06-30 21:40:13.206 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
+2022-06-30 21:40:13.209 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
+2022-06-30 21:40:13.705 - Initialize workbench window
+2022-06-30 21:40:13.712 - Finish initialization
 > Start Default Text Editor [org.eclipse.ui.editors 3.14.300.v20210913-0815]
 > Start Text Editor Framework [org.eclipse.ui.workbench.texteditor 3.16.400.v20220218-1619]
 > Start Equinox Java Authentication and Authorization Service (JAAS) [org.eclipse.equinox.security 1.3.900.v20220108-1321]
@@ -35,8 +34,8 @@
 > Start Internet Connection Management [org.eclipse.core.net 1.3.1100.v20210424-0724]
 > Start DBeaver UI Editors - Data [org.jkiss.dbeaver.ui.editors.data 1.0.84.202206261508]
 > Start DBeaver SQL Model [org.jkiss.dbeaver.model.sql 1.0.74.202206261508]
-2022-06-29 18:59:04.819 - Loading user drivers configuration from '/home/admin/.local/share/DBeaverData/workspace6/.metadata/.plugins/org.jkiss.dbeaver.core/drivers.xml'
-2022-06-29 18:59:04.844 - Total database drivers: 99 (99)
+2022-06-30 21:40:14.916 - Loading user drivers configuration from '/home/admin/.local/share/DBeaverData/workspace6/.metadata/.plugins/org.jkiss.dbeaver.core/drivers.xml'
+2022-06-30 21:40:14.928 - Total database drivers: 99 (99)
 > Start DBeaver Sample Database [org.jkiss.dbeaver.ext.sample.database 1.0.121.202206261508]
 > Start DBeaver Tip of the day [org.jkiss.dbeaver.ext.ui.tipoftheday 1.0.90.202206261508]
 > Start Draw2d [org.eclipse.draw2dl 3.12.100.20220506142945]
@@ -44,9 +43,14 @@
 > Start DBeaver ERD UI [org.jkiss.dbeaver.erd.ui 3.0.44.202206261508]
 > Start DBeaver ERD Model [org.jkiss.dbeaver.erd.model 1.0.44.202206261508]
 > Start DBeaver UI Editors - SQL [org.jkiss.dbeaver.ui.editors.sql 1.0.84.202206261508]
-2022-06-29 18:59:05.948 - Connect with 'kanmi_system' (mysql8-181ad1aad0a-52af7f2ce7c4bbf4)
+2022-06-30 21:40:15.179 - Connect with 'kanmi_system' (mysql8-181ad1aad0a-52af7f2ce7c4bbf4)
 > Start DBeaver MySQL Support [org.jkiss.dbeaver.ext.mysql 2.1.169.202206261508]
-2022-06-29 18:59:06.071 - Execution context opened (kanmi_system; Main; 0)
+2022-06-30 21:40:15.245 - Execution context opened (kanmi_system; Main; 0)
 > Start DBeaver GIS Support [org.jkiss.dbeaver.data.gis 1.0.108.202206261508]
-2022-06-29 18:59:07.016 - Execution context opened (kanmi_system; Metadata; 1)
-2022-06-29 18:59:07.345 - Connected (mysql8-181ad1aad0a-52af7f2ce7c4bbf4, MySQL Connector/J [mysql-connector-java-8.0.17 (Revision: 16a712ddb3f826a1933ab42b0039f7fb9eebc6ec)])
+2022-06-30 21:40:15.578 - Execution context opened (kanmi_system; Metadata; 1)
+2022-06-30 21:40:15.682 - Connected (mysql8-181ad1aad0a-52af7f2ce7c4bbf4, MySQL Connector/J [mysql-connector-java-8.0.17 (Revision: 16a712ddb3f826a1933ab42b0039f7fb9eebc6ec)])
+> Start Team Support Core [org.eclipse.team.core 3.9.300.v20220204-0611]
+2022-06-30 21:40:27.722 - DBeaver is stopping
+2022-06-30 21:40:27.728 - Stop RMI server
+2022-06-30 21:40:27.735 - RMI controller has been stopped
+2022-06-30 21:40:28.301 - DBeaver shutdown completed

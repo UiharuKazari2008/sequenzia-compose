@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Name=Manage SQL Database
+GenericName=Universal Database Manager
+Comment=Universal Database Manager and SQL Client.
+Path=/usr/share/dbeaver-ce/
+Exec=/usr/share/dbeaver-ce/dbeaver
+Icon=/usr/share/dbeaver-ce/dbeaver.png
+Categories=IDE;Development
+StartupWMClass=DBeaver
+StartupNotify=true
+Keywords=Database;SQL;IDE;JDBC;ODBC;MySQL;PostgreSQL;Oracle;DB2;MariaDB
+MimeType=application/sql

@@ -1,0 +1,16 @@
+services:
+  administrator:
+    build:
+      context: ./administrator
+    environment:
+      USER: admin
+      PASSWORD: admin
+      RESOLUTION: 1920x1080
+    ports:
+      - 6080:80
+    volumes:
+      - ./common/admin-home/:/home/admin
+    networks:
+      kanmi_system:
+        aliases:
+          - manager.backend.acr

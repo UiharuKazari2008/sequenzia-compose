@@ -1,6 +1,7 @@
 driver.selector.orderBy=score
 eclipse.preferences.version=1
+org.jkiss.dbeaver.core.confirm.exit=always
 sample.database.canceled=true
 tipOfTheDayInitializer.notFirstRun=true
-ui.auto.update.check.time=1656466609013
+ui.auto.update.check.time=1656624501364
 ui.show.tip.of.the.day.on.startup=false

@@ -1,7 +1,6 @@
 services:
-  kanmi-database:
+  database:
     image: mysql:8-oracle
-    container_name: kanmi-database
     environment:
       MYSQL_ROOT_PASSWORD: Km9@v-A6F%FdSt!6ja8+
     networks:
@@ -11,9 +10,8 @@ services:
     volumes:
       - ./base/base_v20.sql:/docker-entrypoint-initdb.d/setup.sql
       - db_data:/var/lib/mysql
-  kanmi-mq:
+  mq:
     image: rabbitmq:3-management-alpine
-    container_name: kanmi-mq
     environment:
       RABBITMQ_DEFAULT_USER: kanmi
       RABBITMQ_DEFAULT_PASS: t2QpQTmgP32nWThE3eZ4
@@ -25,7 +23,7 @@ services:
         aliases:
           - mq.backend.acr
 
-  kanni-authware:
+  authware:
     build:
       context: ./kanmi-discord-authware
     environment:
@@ -38,12 +36,12 @@ services:
         aliases:
           - authware.kanmi.acr
     depends_on:
-      - kanmi-database
-      - kanmi-mq
+      - database
+      - mq
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
 
-  kanni-framework:
+  framework:
     build:
       context: ./kanmi-discord-framework
     environment:
@@ -56,13 +54,13 @@ services:
         aliases:
           - framework.kanmi.acr
     depends_on:
-      - kanmi-database
-      - kanmi-mq
-      - kanni-authware
+      - database
+      - mq
+      - authware
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
 
-  kanni-fileworker:
+  fileworker:
     build:
       context: ./kanmi-discord-fileworker
     environment:
@@ -75,9 +73,9 @@ services:
         aliases:
           - fileworker.kanmi.acr
     depends_on:
-      - kanmi-database
-      - kanmi-mq
-      - kanni-authware
+      - database
+      - mq
+      - authware
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
       - ./common/data/:/data/
@@ -101,7 +99,7 @@ services:
   #        aliases:
   #          - filesystem.kanmi.acr
 
-  sequenzia-web:
+  web:
     build:
       context: ./sequenzia-web
     environment:
@@ -109,7 +107,6 @@ services:
       WAIT_HOSTS_TIMEOUT: 300
       WAIT_SLEEP_INTERVAL: 30
       WAIT_HOST_CONNECT_TIMEOUT: 30
-    container_name: sequenzia-web
     ports:
       - 3000:3000
     networks:
@@ -119,23 +116,6 @@ services:
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-web/user-config.json:ro
       - ./common/data/:/data/
-
-  admin-terminal:
-    build:
-      context: ./administrator
-    container_name: kanmi-admin
-    environment:
-      USER: admin
-      PASSWORD: admin
-      RESOLUTION: 1920x1080
-    ports:
-      - 6080:80
-    volumes:
-      - ./common/admin-home/:/home/admin
-    networks:
-      kanmi_system:
-        aliases:
-          - manager.backend.acr
 
 networks:
   kanmi_system:
