@@ -15,8 +15,7 @@ RUN apt update && apt install -y git curl wget build-essential && \
     apt clean && chmod +x /wait
 
 # Get Source and Install dependencies
-RUN mkdir /across/ && cd /across && \
-    npm install --force youtube-dl && \
+RUN mkdir /across/ && \
     git clone -b $GIT_BRANCH "https://github.com/UiharuKazari2008/kanmi" /across/sequenzia-framework  && \
     cd /across/sequenzia-framework && npm install && \
     git clone -b $GIT_BRANCH "https://github.com/UiharuKazari2008/sequenzia" /across/sequenzia-web && \
