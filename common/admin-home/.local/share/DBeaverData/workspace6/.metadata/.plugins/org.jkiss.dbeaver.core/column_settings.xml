@@ -5,6 +5,13 @@
 		<column name="Enabled" visible="true" order="1" width="100"/>
 		<column name="Description" visible="true" order="2" width="1210"/>
 	</item>
+	<item id="NodeList/MySQLTable">
+		<column name="Table Name" visible="true" order="0" width="218"/>
+		<column name="Engine" visible="true" order="1" width="100"/>
+		<column name="Auto Increment" visible="true" order="2" width="131"/>
+		<column name="Data Length" visible="true" order="3" width="107"/>
+		<column name="Description" visible="true" order="4" width="821"/>
+	</item>
 	<item id="NodeList/MySQLTableColumn">
 		<column name="Column Name" visible="true" order="0" width="120"/>
 		<column name="#" visible="true" order="1" width="100"/>

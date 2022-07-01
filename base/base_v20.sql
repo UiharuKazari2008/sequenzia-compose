@@ -1,5 +1,4 @@
 -- create the databases
-DROP DATABASE IF EXISTS kanmi_system;
 CREATE DATABASE IF NOT EXISTS kanmi_system;
 
 -- create the users for each database

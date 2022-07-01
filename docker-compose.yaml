@@ -1,8 +1,7 @@
 services:
   database:
     image: mysql:8-oracle
-    environment:
-      MYSQL_ROOT_PASSWORD: Km9@v-A6F%FdSt!6ja8+
+    env_file: ./common/config/user-config.env
     networks:
       kanmi_system:
         aliases:
@@ -13,9 +12,7 @@ services:
     restart: unless-stopped
   mq:
     image: rabbitmq:3-management-alpine
-    environment:
-      RABBITMQ_DEFAULT_USER: kanmi
-      RABBITMQ_DEFAULT_PASS: t2QpQTmgP32nWThE3eZ4
+    env_file: ./common/config/user-config.env
     volumes:
       - mq_data:/var/lib/rabbitmq/
     networks:
@@ -27,11 +24,9 @@ services:
   authware:
     build:
       context: ./kanmi-discord-authware
-    environment:
-      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
-      WAIT_HOSTS_TIMEOUT: 300
-      WAIT_SLEEP_INTERVAL: 30
-      WAIT_HOST_CONNECT_TIMEOUT: 30
+    env_file:
+      - ./common/config/user-config.env
+      - ./common/config/setup-authware.env
     networks:
       kanmi_system:
         aliases:
@@ -40,17 +35,13 @@ services:
       - database
       - mq
     volumes:
-      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
-    restart: on-failure
-
+      - ./common/config/setup-authware.env:/across/setup-authware.env
+      - ./common/config/user-config.json:/across/user-config.json:ro
+    restart: unless-stopped
   framework:
     build:
       context: ./kanmi-discord-framework
-    environment:
-      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
-      WAIT_HOSTS_TIMEOUT: 300
-      WAIT_SLEEP_INTERVAL: 30
-      WAIT_HOST_CONNECT_TIMEOUT: 30
+    env_file: ./common/config/user-config.env
     networks:
       kanmi_system:
         aliases:
@@ -60,17 +51,12 @@ services:
       - mq
       - authware
     volumes:
-      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
-    restart: on-failure
-
+      - ./common/config/user-config.json:/across/user-config.json:ro
+    restart: unless-stopped
   fileworker:
     build:
       context: ./kanmi-discord-fileworker
-    environment:
-      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
-      WAIT_HOSTS_TIMEOUT: 300
-      WAIT_SLEEP_INTERVAL: 30
-      WAIT_HOST_CONNECT_TIMEOUT: 30
+    env_file: ./common/config/user-config.env
     networks:
       kanmi_system:
         aliases:
@@ -80,18 +66,13 @@ services:
       - mq
       - authware
     volumes:
-      - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+      - ./common/config/user-config.json:/across/user-config.json:ro
       - ./common/data/:/data/
-    restart: on-failure
-
+    restart: unless-stopped
   web:
     build:
       context: ./sequenzia-web
-    environment:
-      WAIT_HOSTS: sql.backend.acr:3306, mq.backend.acr:5672
-      WAIT_HOSTS_TIMEOUT: 300
-      WAIT_SLEEP_INTERVAL: 30
-      WAIT_HOST_CONNECT_TIMEOUT: 30
+    env_file: ./common/config/user-config.env
     ports:
       - 3000:3000
     networks:
@@ -99,9 +80,9 @@ services:
         aliases:
           - sequenzia.acr
     volumes:
-      - ./common/config/user-config.json:/across/sequenzia-web/user-config.json:ro
+      - ./common/config/user-config.json:/across/user-config.json:ro
       - ./common/data/:/data/
-    restart: on-failure
+    restart: unless-stopped
 
 networks:
   kanmi_system:
@@ -111,6 +92,7 @@ networks:
         - subnet: 192.168.85.0/24
     driver_opts:
       com.docker.networks.bridge.name: br-kanmi_system
+
 volumes:
   db_data:
   mq_data:

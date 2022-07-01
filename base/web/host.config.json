@@ -11,7 +11,7 @@
   "mq_inbox" : "inbox.sequenzia",
   "discord_id": "",
   "discord_secret": "",
-  "discord_redirect_base": "http://127.0.0.1:3000",
+  "base_url": "http://localhost:3000",
   "cookie_secret": "DockerKanmi@CHANGETHISDAMNSECRET",
   "use_secure_cookie": false
 }

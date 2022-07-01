@@ -1,4 +1,4 @@
-FROM acr/across-kanmi:latest
+FROM kihara/across-base:latest
 
 LABEL maintainer="Yukimi Kazari <kazari@acr.moe>"
 
@@ -6,8 +6,14 @@ ENV DEBIAN_FRONTEND noninteractive
 
 COPY public/* /across/sequenzia-web/public/
 
-CMD /wait \
-&& cd /across/sequenzia-web/ \
-&& git pull \
-&& node start.js
+CMD cd /across/sequenzia-web/ && \
+    jq -s '.[0] * .[1]' /across/sequenzia-web/config.json /across/user-config.json > /across/sequenzia-web/.config.json && \
+    mv /across/sequenzia-web/.config.json /across/sequenzia-web/config.json && \
+    jq -s '.[0] * .[1]' /across/sequenzia-web/host.config.json /across/user-config.json > /across/sequenzia-web/.host.config.json && \
+    mv /across/sequenzia-web/.host.config.json /across/sequenzia-web/host.config.json && \
+    jq -s '.[0] * .[1]' /across/sequenzia-web/web.config.json /across/user-config.json > /across/sequenzia-web/.web.config.json && \
+    mv /across/sequenzia-web/.web.config.json /across/sequenzia-web/web.config.json && \
+    git pull --rebase && \
+    /wait && node start.js
+
 EXPOSE 3000/tcp
