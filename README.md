@@ -10,7 +10,7 @@ This is a simple "turn-key" solution for the Kanmi x Sequenzia system. This is m
 ### [Click here for installation and setup guide](https://github.com/UiharuKazari2008/sequenzia-compose/wiki/Installation)
 
 ## I NEED HELP!
-If you need with Sequenzia, you can message me on Discord `Yukimi Kazari#9854`. Otherwise if it's a issue, report it on GitHub as i cant keep track of comment off hand im very busy...
+If you need with Sequenzia, you can message me on Discord `Yukimi Kazari#9854` or [join the official private discord](https://discord.gg/TbNyVmqRzh). Otherwise if it's a issue, report it on GitHub as i cant keep track of comment off hand im very busy...
 
 ## Reporting Issues
 Sequenzia is not a single project or system but multiple separate projects.
