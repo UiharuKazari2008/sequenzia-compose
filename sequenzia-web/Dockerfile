@@ -13,7 +13,7 @@ CMD cd /across/sequenzia-web/ && \
     mv /across/sequenzia-web/.host.config.json /across/sequenzia-web/host.config.json && \
     jq -s '.[0] * .[1]' /across/sequenzia-web/web.config.json /across/user-config.json > /across/sequenzia-web/.web.config.json && \
     mv /across/sequenzia-web/.web.config.json /across/sequenzia-web/web.config.json && \
-    git pull --rebase && \
+    git pull && \
     /wait && node start.js
 
 EXPOSE 3000/tcp
