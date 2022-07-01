@@ -82,7 +82,7 @@ services:
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
       - ./common/data/:/data/
-  restart: on-failure
+    restart: on-failure
 
   web:
     build:
