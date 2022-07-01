@@ -10,6 +10,7 @@ services:
     volumes:
       - ./base/base_v20.sql:/docker-entrypoint-initdb.d/setup.sql
       - db_data:/var/lib/mysql
+    restart: unless-stopped
   mq:
     image: rabbitmq:3-management-alpine
     environment:
@@ -21,6 +22,7 @@ services:
       kanmi_system:
         aliases:
           - mq.backend.acr
+    restart: unless-stopped
 
   authware:
     build:
@@ -39,6 +41,7 @@ services:
       - mq
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+    restart: on-failure
 
   framework:
     build:
@@ -58,6 +61,7 @@ services:
       - authware
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
+    restart: on-failure
 
   fileworker:
     build:
@@ -78,6 +82,7 @@ services:
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-framework/user-config.json:ro
       - ./common/data/:/data/
+  restart: on-failure
 
   web:
     build:
@@ -96,6 +101,7 @@ services:
     volumes:
       - ./common/config/user-config.json:/across/sequenzia-web/user-config.json:ro
       - ./common/data/:/data/
+    restart: on-failure
 
 networks:
   kanmi_system:
