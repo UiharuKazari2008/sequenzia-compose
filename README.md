@@ -17,3 +17,38 @@ Sequenzia is not a single project or system but multiple separate projects.
 * **Issues related to the installation proccess or possibly related to docker should be reported here**
 * Filesystem, backend, and discord should be reported [in the kanmi project](https://github.com/UiharuKazari2008/kanmi/issues)
 * Web interface or its APIs should be reported [in the sequenzia project](https://github.com/UiharuKazari2008/sequenzia/issues)
+
+## Quick Commands
+### Start with Web Desktop for SQL Administration
+```shell
+docker compose -f docker-compose.yaml -f docker-compose-manager.yaml up
+```
+
+### Stop with Web Desktop for SQL Administration
+```shell
+docker compose -f docker-compose.yaml -f docker-compose-manager.yaml down
+```
+
+### Start Server:
+```shell
+docker compose up
+```
+
+### Stop Server
+```shell
+docker compose down
+```
+
+### Update Server
+*Add `-f` for the extra modules you are trying to restart*
+```shell
+docker compose restart
+```
+
+### Update Base Image (When you date files in /base/)
+*Add `-f` for the extra modules you are trying to restart*
+```shell
+docker build --no-cache -t acr/across-kanmi:latest ./base
+docker compose build --no-cache
+```
+**If you are only updateing the config files you do not need `--no-cache` to speed up build times**
