@@ -9,5 +9,5 @@ CMD cd /across/sequenzia-framework/ && \
     mv /across/sequenzia-framework/.config.json /across/sequenzia-framework/config.json && \
     git pull && /wait && \
     cd install && node inital-setup.js && \
-    echo "# .env\n#SETUP_TYPE: storage\n#SETUP_SERVERID: " > /across/setup-authware.env && \
+    echo "# .env\n#SETUP_TYPE='storage'\n#SETUP_SERVERID=''" > /across/setup-authware.env && \
     cd ../ && node js/authware.js
