@@ -45,10 +45,10 @@ docker compose down
 docker compose restart
 ```
 
-### Update Base Image (When you date files in /base/)
+### Update Base Image (When you modify files in /base)
 *Add `-f` for the extra modules you are trying to restart*
 ```shell
-docker build --no-cache -t acr/across-kanmi:latest ./base
+docker build --no-cache -t kihara/across-base:latest ./base
 docker compose build --no-cache
 ```
 **If you are only updateing the config files you do not need `--no-cache` to speed up build times**
