@@ -17,4 +17,4 @@ services:
         kanmi_system:
           aliases:
             - filesystem.kanmi.acr
-      restart: unless-stopped
+      restart: on-failure

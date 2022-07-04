@@ -1,0 +1,19 @@
+{
+  "Discord_Alarm_Channel": "991736827172110405",
+  "Discord_Warn_Channel": "991736827394396231",
+  "Discord_Status": [
+    {
+      "id": "main",
+      "name": "SYS",
+      "channel": "watchdog_cpu",
+      "header": "⚡",
+      "type": "indicator",
+      "watchdogs": [
+        "Discord-IO-DOCKER-A",
+        "Discord-AuthWare-DOCKER-A",
+        "FileWorker-DOCKER-A",
+        "Sequenzia-DOCKER-A"
+      ]
+    }
+  ]
+}

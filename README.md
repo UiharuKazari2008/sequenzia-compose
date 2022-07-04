@@ -8,6 +8,9 @@ This is a simple "turn-key" solution for the Kanmi x Sequenzia system. This is m
 
 <img width="1059" src="https://user-images.githubusercontent.com/15165770/176510591-c0dd6320-eca8-44ec-bb99-fbcb20763b07.png" >
 
+# NOTICE
+This is considered to be in active development and Dockerfiles and configurations can be changed on the fly to make this more reliable for the long term. Please allways check the CHANGELOG for the latest chnages and the Installation guide for the latest configuration.<br/>
+
 # Features
 * Human-readable Discord Filesystem
 * Indirect file access for end-users

@@ -1,13 +1,12 @@
-FROM kihara/across-base:latest
+FROM kihara/across-base:v20
 
 LABEL maintainer="Yukimi Kazari <kazari@acr.moe>"
 
 ENV DEBIAN_FRONTEND noninteractive
 
 CMD cd /across/sequenzia-framework/ && \
-    jq -s '.[0] * .[1]' /across/sequenzia-framework/config.json /across/user-config.json > /across/sequenzia-framework/.config.json && \
-    mv /across/sequenzia-framework/.config.json /across/sequenzia-framework/config.json && \
+    jq -s '.[0] * .[1]' /across/sequenzia-framework/base.config.json /across/user-config.json > /across/sequenzia-framework/config.json && \
     git pull && /wait && \
     cd install && node inital-setup.js && \
-    echo "# .env\n#SETUP_TYPE='storage'\n#SETUP_SERVERID=''" > /across/setup-authware.env && \
+    echo "# .env\n#READ THE WIKI BEFORE EDITS\n#SETUP_TYPE='storage'\n#SETUP_SERVERID=''" > /across/setup-authware.env && \
     cd ../ && node js/authware.js

@@ -14,4 +14,4 @@ services:
       kanmi_system:
         aliases:
           - manager.backend.acr
-    restart: unless-stopped
+    restart: on-failure

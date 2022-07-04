@@ -1,25 +1,45 @@
-FROM bitnami/minideb:bullseye AS builder
+FROM node:14-alpine AS node
+FROM alpine:3.16.0
 
 LABEL maintainer="Yukimi Kazari <kazari@acr.moe>"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV WAIT_VERSION 2.7.2
+
+# If your running a custom fork, set it here
 ENV GIT_BRANCH prerelease
+ENV REPO_FRAMEWORK "https://github.com/UiharuKazari2008/kanmi"
+ENV REPO_WEB "https://github.com/UiharuKazari2008/sequenzia"
+ENV REPO_WATCHDOG "https://github.com/UiharuKazari2008/kanmi-watchdog"
+ENV REPO_RANDOMIZER "https://github.com/UiharuKazari2008/sequenzia-random-bot"
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
 
-# Install Base
-RUN apt update && apt install -y git curl wget build-essential && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt update && apt install -y ffmpeg libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev nodejs openssl jq && \
-    apt clean && chmod +x /wait
+# Install Node.js from another image
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/share /usr/local/share
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
 
-# Get Source and Install dependencies
-RUN mkdir /across/ && \
-    git clone -b $GIT_BRANCH "https://github.com/UiharuKazari2008/kanmi" /across/sequenzia-framework  && \
-    cd /across/sequenzia-framework && npm install && \
-    git clone -b $GIT_BRANCH "https://github.com/UiharuKazari2008/sequenzia" /across/sequenzia-web && \
-    cd /across/sequenzia-web && npm install
+# Install Base Packages
+# Make Wait Executable
+# Make sure Split is actually installed
+# Get Source and Install dependencies + YouTube DL
+COPY framework/* /across/.framework/
+COPY web/* /across/.web/
+COPY watchdog/* /across/.watchdog/
+COPY honey/* /across/.honey/
 
-COPY framework/* /across/sequenzia-framework/
-COPY web/* /across/sequenzia-web/
+RUN mkdir -p /across/ && \
+    apk add git curl wget ffmpeg pango-dev jpeg-dev giflib-dev openssl jq make g++ vips-dev mysql-client && \
+    chmod +x /wait && ls /usr/bin/split && \
+    git clone -b $GIT_BRANCH "$REPO_FRAMEWORK" /across/sequenzia-framework  && \
+    cd /across/sequenzia-framework && npm install --force youtube-dl && \
+    npm install && cp -r ../.framework/* ./  && rm -rf ../.framework && \
+    git clone -b $GIT_BRANCH "$REPO_WEB" /across/sequenzia-web && \
+    cd /across/sequenzia-web && npm install && cp -r ../.web/* ./  && rm -rf ../.web && \
+    git clone "$REPO_WATCHDOG" /across/watchdog && \
+    cd /across/watchdog && npm install && cp -r ../.watchdog/* ./  && rm -rf ../.watchdog && \
+    git clone "$REPO_RANDOMIZER" /across/honey && \
+    cd /across/honey && npm install && cp -r ../.honey/* ./  && rm -rf ../.honey
