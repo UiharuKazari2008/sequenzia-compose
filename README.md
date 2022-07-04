@@ -35,12 +35,18 @@ Sequenzia is not a single project or system but multiple separate projects.
 ## Quick Commands
 ### Start Server:
 ```shell
-docker compose up
+docker compose up -d
 ```
 
 ### Stop Server
 ```shell
 docker compose down
+```
+
+### Update Server
+*Add `-f` for the extra modules you are trying to restart*
+```shell
+docker compose restart
 ```
 
 ### Start with Web Desktop for SQL Administration
@@ -53,11 +59,6 @@ docker compose -f docker-compose.yaml -f docker-compose-manager.yaml up
 docker compose -f docker-compose.yaml -f docker-compose-manager.yaml down
 ```
 
-### Update Server
-*Add `-f` for the extra modules you are trying to restart*
-```shell
-docker compose restart
-```
 
 ### Update Base Image (When you modify files in /base)
 *Add `-f` for the extra modules you are trying to restart*

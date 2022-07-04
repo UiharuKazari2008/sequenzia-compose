@@ -21,6 +21,22 @@ services:
           - mq.backend.acr
     restart: unless-stopped
 
+  watchdog:
+    build:
+      context: ./kanmi-watchdog
+    env_file:
+      - ./common/config/user-config.env
+    networks:
+      kanmi_system:
+        aliases:
+          - watchdog.kanmi.acr
+    depends_on:
+      - database
+    volumes:
+      - ./common/data/:/data/
+      - ./kanmi-watchdog/config.json:/across/watchdog/config.json:ro
+      - ./kanmi-watchdog/watchdog.config.json:/across/watchdog/watchdog.config.json:ro
+    restart: unless-stopped
   authware:
     build:
       context: ./kanmi-discord-authware

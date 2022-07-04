@@ -1,0 +1,14 @@
+{
+  "SystemName": "DOCKER-A",
+  "LogServer" : [ ],
+  "SQLServer": "sql.backend.acr",
+  "MQServer": "mq.backend.acr",
+  "SQLUsername" : "kanmi",
+  "SQLPassword" : "=9R3hxEhZ?9B8bf#+2d4",
+  "SQLDatabase" : "kanmi_system",
+  "MQUsername": "kanmi",
+  "MQPassword": "t2QpQTmgP32nWThE3eZ4",
+  "Discord_In": "inbox.discord",
+  "Discord_Out": "outbox.discord",
+  "Discord_Key": ""
+}
