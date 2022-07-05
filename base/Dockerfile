@@ -31,15 +31,16 @@ COPY web/* /across/.web/
 COPY watchdog/* /across/.watchdog/
 COPY honey/* /across/.honey/
 
-RUN mkdir -p /across/ && \
-    apk add git curl wget ffmpeg pango-dev jpeg-dev giflib-dev openssl jq make g++ vips-dev mysql-client && \
-    chmod +x /wait && ls /usr/bin/split && \
-    git clone -b $GIT_BRANCH "$REPO_FRAMEWORK" /across/sequenzia-framework  && \
-    cd /across/sequenzia-framework && npm install --force youtube-dl && \
-    npm install && cp -r ../.framework/* ./  && rm -rf ../.framework && \
+RUN apk add git curl wget ffmpeg pango-dev jpeg-dev giflib-dev openssl jq make g++ vips-dev mysql-client && \
+    chmod +x /wait && ls /usr/bin/split
+
+RUN git clone -b $GIT_BRANCH "$REPO_FRAMEWORK" /across/sequenzia-framework && \
     git clone -b $GIT_BRANCH "$REPO_WEB" /across/sequenzia-web && \
-    cd /across/sequenzia-web && npm install && cp -r ../.web/* ./  && rm -rf ../.web && \
     git clone "$REPO_WATCHDOG" /across/watchdog && \
-    cd /across/watchdog && npm install && cp -r ../.watchdog/* ./  && rm -rf ../.watchdog && \
-    git clone "$REPO_RANDOMIZER" /across/honey && \
-    cd /across/honey && npm install && cp -r ../.honey/* ./  && rm -rf ../.honey
+    git clone "$REPO_RANDOMIZER" /across/honey
+
+RUN cd /across/sequenzia-framework && git pull && npm install --force youtube-dl && \
+    npm install && cp -r ../.framework/* ./  && rm -rf ../.framework
+RUN cd /across/sequenzia-web && git pull && npm install && cp -r ../.web/* ./  && rm -rf ../.web
+RUN cd /across/watchdog && git pull && npm install && cp -r ../.watchdog/* ./  && rm -rf ../.watchdog
+RUN cd /across/honey && git pull && npm install && cp -r ../.honey/* ./  && rm -rf ../.honey

@@ -9,5 +9,4 @@ CMD cd /across/sequenzia-framework/ && \
     mkdir -p /data/.temp /data/upload /data/.web-upload /data/download || true && \
     chown -R nobody:nogroup /data/.temp /data/upload /data/.web-upload /data/download || true  && \
     chmod -R 777 /data/.temp /data/upload /data/.web-upload /data/download || true  && \
-    git pull && \
     /wait && node js/fileworker.js
