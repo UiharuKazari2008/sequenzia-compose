@@ -16,9 +16,12 @@ This is considered to be in active development and Dockerfiles and configuration
   - Users do not need to be a member or need permission to see the channels in discord
   - Access controls are handled by assigning dummy roles to users
   - AuthWare provides a proxy to manage users and permissions
-* File uploader with a dropbox folder
-* Web interface for accessing and managing files
-* Client side file complilation
+* File uploader with watch folders that are liked to channels
+* Modern HTML5 Web interface for accessing and managing files
+  - Supports Chrome and Apple WebKit
+* Client-side file compiler (LB+CS-FC) in browser
+  - Allows large files that have been split into parity to be build on the client side browser
+  - This reduces server load and makes the end user the bearer of the file
 * Web based Ambient Display (Photo frame) that can be setup on a RPi
 * Discord based command interface
 * Automatic Backup system
@@ -28,16 +31,21 @@ This is considered to be in active development and Dockerfiles and configuration
 
 # Screenshots
 _Screenshots are from the production installation and may not refect a new installation and may show features that have not been documented yet_<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 37 21" src="https://user-images.githubusercontent.com/15165770/177225566-3798e929-ed19-416c-b881-b76bde5b15ca.png"><br/>
+
 **Homepage**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 38 29" src="https://user-images.githubusercontent.com/15165770/177225620-629e2d88-b4a2-4b48-82cc-53602964b299.png"><br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 37 21" src="https://user-images.githubusercontent.com/15165770/177521828-654963fe-00d7-4af1-81ad-6e3a39b85ce3.png"><br/>
+
 **Latest Media Gallery with Menu open**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 33 56" src="https://user-images.githubusercontent.com/15165770/177225397-ec1184e0-8724-4201-a5ef-04da5745e1a8.png"><br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 38 29" src="https://user-images.githubusercontent.com/15165770/177522138-5a526172-9047-4dba-af57-952db0e17097.png"><br/>
+
 **Gallery of a channel**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 47 45" src="https://user-images.githubusercontent.com/15165770/177226094-98fe79c2-87a2-4028-8e0a-0dda9fbb6c99.png"><br/>
-**IntelliDex Artist Directory**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/177226415-26cbf8a0-e00a-4967-bf96-9d7610d5e945.png">
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 33 56" src="https://user-images.githubusercontent.com/15165770/177522385-3eca45e5-7f78-4cc6-ae86-1a69ac8dd260.png"><br/>
+
 **File list of a channel**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/177522643-54974aa3-fe8c-4f0a-ae7a-3eab94e9b207.png"><br/>
+
+**Playback of a large video file by useing client-side file compiler (LB+CS-FC v1)**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/177522920-93a36950-57d7-4043-9e52-e7067607ef87.png"><br/>
 
 ## I NEED HELP!
 If you need with Sequenzia, you can message me on Discord `Yukimi Kazari#9854` or [join the official private discord](https://discord.gg/TbNyVmqRzh). Otherwise if it's a issue, report it on GitHub as i cant keep track of comment off hand im very busy...
