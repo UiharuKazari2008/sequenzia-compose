@@ -48,7 +48,7 @@ _Screenshots are from the production installation and may not refect a new insta
 <img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/177522920-93a36950-57d7-4043-9e52-e7067607ef87.png"><br/>
 
 ## I NEED HELP!
-If you need with Sequenzia, you can message me on Discord `Yukimi Kazari#9854` or [join the official private discord](https://discord.gg/TbNyVmqRzh). Otherwise if it's a issue, report it on GitHub as i cant keep track of comment off hand im very busy...
+If you need with Sequenzia, you can message me on Discord `Yukimi Kazari#9854`. Otherwise if it's a issue, report it on GitHub as i cant keep track of comment off hand im very busy...
 
 ## Reporting Issues
 Sequenzia is not a single project or system but multiple separate projects.
