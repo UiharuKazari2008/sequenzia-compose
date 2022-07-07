@@ -1,6 +1,6 @@
 FROM kihara/across-base:v20
 
-LABEL maintainer="Yukimi Kazari <kazari@acr.moe>"
+MAINTAINER Yukimi Kazari <kazari@acr.moe>
 
 ENV DEBIAN_FRONTEND noninteractive
 

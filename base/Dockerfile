@@ -1,7 +1,7 @@
 FROM node:14-alpine AS node
 FROM alpine:3.16.0
 
-LABEL maintainer="Yukimi Kazari <kazari@acr.moe>"
+MAINTAINER Yukimi Kazari <kazari@acr.moe>
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV WAIT_VERSION 2.7.2
