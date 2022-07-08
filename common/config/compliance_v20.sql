@@ -11,3 +11,11 @@ set @query = IF(@exist <= 0, 'ALTER TABLE discord_users add column google_id var
 prepare google_id_add from @query;
 
 EXECUTE google_id_add;
+
+CREATE TABLE IF NOT EXISTS `kanmi_records_extended` (
+  `eid` int NOT NULL,
+  `data` json DEFAULT NULL,
+  PRIMARY KEY (`eid`),
+  UNIQUE KEY `kanmi_records_extended_eid_uindex` (`eid`),
+  CONSTRAINT `kanmi_records_extended_kanmi_records_eid_fk` FOREIGN KEY (`eid`) REFERENCES `kanmi_records` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE
+);
