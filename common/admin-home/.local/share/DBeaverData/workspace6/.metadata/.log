@@ -133,3 +133,12 @@ java.sql.SQLNonTransientConnectionException: Public Key Retrieval is not allowed
 	at org.jkiss.dbeaver.ui.LoadingJob.run(LoadingJob.java:72)
 	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:105)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2022-07-09 03:08:20.372 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=11.0.12
+java.vendor=Eclipse Foundation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.jkiss.dbeaver.model 4 0 2022-07-09 03:09:25.502
+!MESSAGE At least two objects must be selected to perform structure compare

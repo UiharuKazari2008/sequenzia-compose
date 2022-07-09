@@ -1,13 +1,13 @@
-2022-07-01 22:02:11.820 - Create display
-2022-07-01 22:02:11.990 - DBeaver 22.1.1.202206261508 is starting
-2022-07-01 22:02:11.993 - OS: Linux 5.10.104-linuxkit (amd64)
-2022-07-01 22:02:11.995 - Java version: 11.0.12 by Eclipse Foundation (64bit)
-2022-07-01 22:02:11.997 - Install path: '/usr/share/dbeaver-ce'
-2022-07-01 22:02:11.999 - Instance path: 'file:/home/admin/.local/share/DBeaverData/workspace6/'
-2022-07-01 22:02:12.001 - Memory available 77Mb/1024Mb
+2022-07-09 03:08:22.687 - Create display
+2022-07-09 03:08:22.830 - DBeaver 22.1.1.202206261508 is starting
+2022-07-09 03:08:22.833 - OS: Linux 5.10.104-linuxkit (amd64)
+2022-07-09 03:08:22.835 - Java version: 11.0.12 by Eclipse Foundation (64bit)
+2022-07-09 03:08:22.837 - Install path: '/usr/share/dbeaver-ce'
+2022-07-09 03:08:22.839 - Instance path: 'file:/home/admin/.local/share/DBeaverData/workspace6/'
+2022-07-09 03:08:22.841 - Memory available 64Mb/1024Mb
 > Start DBeaver UI Editors - Base [org.jkiss.dbeaver.ui.editors.base 1.0.84.202206261508]
-2022-07-01 22:02:12.041 - Starting RMI server at 20390
-2022-07-01 22:02:12.129 - Run workbench
+2022-07-09 03:08:22.867 - Starting RMI server at 58282
+2022-07-09 03:08:22.957 - Run workbench
 > Start Eclipse e4 Workbench SWT [org.eclipse.e4.ui.workbench.swt 0.16.400.v20220222-1128]
 > Start Eclipse Application Services [org.eclipse.e4.core.services 2.3.100.v20210910-0640]
 > Start Eclipse UI Application Services [org.eclipse.e4.ui.services 1.5.0.v20210115-1333]
@@ -19,14 +19,14 @@
 > Start Eclipse Dependency Injection Extensions [org.eclipse.e4.core.di.extensions 0.17.100.v20210910-0640]
 > Start Eclipse CSS SWT Support [org.eclipse.e4.ui.css.swt 0.14.400.v20211026-1534]
 > Start DBeaver UI [org.jkiss.dbeaver.ui 5.1.99.202206261508]
-2022-07-01 22:02:14.071 - Configure workbench window
+2022-07-09 03:08:24.800 - Configure workbench window
 > Start Help System Core [org.eclipse.help 3.9.100.v20210721-0601]
-2022-07-01 22:02:14.196 - Create actions
-2022-07-01 22:02:14.204 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
-2022-07-01 22:02:14.207 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
-2022-07-01 22:02:14.209 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
-2022-07-01 22:02:14.677 - Initialize workbench window
-2022-07-01 22:02:14.684 - Finish initialization
+2022-07-09 03:08:24.890 - Create actions
+2022-07-09 03:08:24.896 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
+2022-07-09 03:08:24.900 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
+2022-07-09 03:08:24.901 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
+2022-07-09 03:08:25.383 - Initialize workbench window
+2022-07-09 03:08:25.394 - Finish initialization
 > Start Default Text Editor [org.eclipse.ui.editors 3.14.300.v20210913-0815]
 > Start Text Editor Framework [org.eclipse.ui.workbench.texteditor 3.16.400.v20220218-1619]
 > Start Equinox Java Authentication and Authorization Service (JAAS) [org.eclipse.equinox.security 1.3.900.v20220108-1321]
@@ -34,8 +34,8 @@
 > Start Internet Connection Management [org.eclipse.core.net 1.3.1100.v20210424-0724]
 > Start DBeaver UI Editors - Data [org.jkiss.dbeaver.ui.editors.data 1.0.84.202206261508]
 > Start DBeaver SQL Model [org.jkiss.dbeaver.model.sql 1.0.74.202206261508]
-2022-07-01 22:02:15.878 - Loading user drivers configuration from '/home/admin/.local/share/DBeaverData/workspace6/.metadata/.plugins/org.jkiss.dbeaver.core/drivers.xml'
-2022-07-01 22:02:15.892 - Total database drivers: 99 (99)
+2022-07-09 03:08:26.543 - Loading user drivers configuration from '/home/admin/.local/share/DBeaverData/workspace6/.metadata/.plugins/org.jkiss.dbeaver.core/drivers.xml'
+2022-07-09 03:08:26.555 - Total database drivers: 99 (99)
 > Start DBeaver Sample Database [org.jkiss.dbeaver.ext.sample.database 1.0.121.202206261508]
 > Start DBeaver Tip of the day [org.jkiss.dbeaver.ext.ui.tipoftheday 1.0.90.202206261508]
 > Start Draw2d [org.eclipse.draw2dl 3.12.100.20220506142945]
@@ -43,12 +43,16 @@
 > Start DBeaver ERD UI [org.jkiss.dbeaver.erd.ui 3.0.44.202206261508]
 > Start DBeaver ERD Model [org.jkiss.dbeaver.erd.model 1.0.44.202206261508]
 > Start DBeaver UI Editors - SQL [org.jkiss.dbeaver.ui.editors.sql 1.0.84.202206261508]
-2022-07-01 22:02:16.191 - Connect with 'kanmi_system' (mysql8-181ad1aad0a-52af7f2ce7c4bbf4)
+2022-07-09 03:08:26.817 - Connect with 'kanmi_system' (mysql8-181ad1aad0a-52af7f2ce7c4bbf4)
 > Start DBeaver MySQL Support [org.jkiss.dbeaver.ext.mysql 2.1.169.202206261508]
-2022-07-01 22:02:16.252 - Execution context opened (kanmi_system; Main; 0)
+2022-07-09 03:08:26.868 - Execution context opened (kanmi_system; Main; 0)
 > Start DBeaver GIS Support [org.jkiss.dbeaver.data.gis 1.0.108.202206261508]
-2022-07-01 22:02:16.665 - Execution context opened (kanmi_system; Metadata; 1)
-2022-07-01 22:02:16.788 - Connected (mysql8-181ad1aad0a-52af7f2ce7c4bbf4, MySQL Connector/J [mysql-connector-java-8.0.17 (Revision: 16a712ddb3f826a1933ab42b0039f7fb9eebc6ec)])
-2022-07-01 22:02:18.428 - Open [https://dbeaver.io/product/version.xml]
-2022-07-01 22:02:33.373 - Can't get column 'password': Column 'password' not found.
+2022-07-09 03:08:27.237 - Execution context opened (kanmi_system; Metadata; 1)
+2022-07-09 03:08:27.352 - Connected (mysql8-181ad1aad0a-52af7f2ce7c4bbf4, MySQL Connector/J [mysql-connector-java-8.0.17 (Revision: 16a712ddb3f826a1933ab42b0039f7fb9eebc6ec)])
+2022-07-09 03:08:29.100 - Open [https://dbeaver.io/product/version.xml]
 > Start DBeaver MySQL UI Support [org.jkiss.dbeaver.ext.mysql.ui 1.0.76.202206261508]
+> Start DBeaver UI Editors - Connections [org.jkiss.dbeaver.ui.editors.connection 1.0.75.202206261508]
+> Start DBeaver Tasks View [org.jkiss.dbeaver.tasks.ui.view 1.0.33.202206261508]
+> Start DBeaver Tasks - General UI [org.jkiss.dbeaver.tasks.ui 1.0.62.202206261508]
+> Start DBeaver Schema Compare UI (Simple) [org.jkiss.dbeaver.cmp.simple.ui 6.0.80.202206261508]
+2022-07-09 03:09:25.493 - At least two objects must be selected to perform structure compare
