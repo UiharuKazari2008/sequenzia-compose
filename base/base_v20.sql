@@ -7,6 +7,8 @@ GRANT ALL PRIVILEGES ON `kanmi_system`.* TO 'kanmi'@'%';
 
 FLUSH PRIVILEGES;
 
+USE kanmi_system;
+
 -- MySQL dump 10.13  Distrib 8.0.26, for Linux (x86_64)
 --
 -- Host: localhost    Database: kanmi_system
