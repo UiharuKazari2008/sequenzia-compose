@@ -79,16 +79,16 @@ docker compose restart
 docker compose -f docker-compose.yaml -f docker-compose-manager.yaml up
 ```
 
-### Stop with Web Desktop for SQL Administration
+### Start with Windows Share
 ```shell
-docker compose -f docker-compose.yaml -f docker-compose-manager.yaml down
+docker compose -f docker-compose.yaml -f docker-compose-share.yaml up
 ```
+This will provide a Windows Share that you can access or mount as a Network Drive<br/>
+`\\<IPADDRESS>\upload`
 
 
-### Update Base Image (When you modify files in /base)
+### Update Base Image (When you modify files in /base or Unsupposted CPU Architecture)
 *Add `-f` for the extra modules you are trying to restart*
 ```shell
-docker build --no-cache -t kihara/across-base:latest ./base
-docker compose build --no-cache
+sh base/build-base.sh
 ```
-**If you are only updating the config files you do not need `--no-cache` to speed up build times**
