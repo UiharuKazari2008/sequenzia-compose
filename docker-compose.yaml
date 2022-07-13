@@ -7,6 +7,7 @@ services:
         aliases:
           - sql.backend.acr
     volumes:
+      - ./common/data/backup/:/backup/
       - ./base/base_v20.sql:/docker-entrypoint-initdb.d/setup.sql
       - db_data:/var/lib/mysql
     restart: unless-stopped
