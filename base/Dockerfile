@@ -9,6 +9,7 @@ ENV WAIT_VERSION 2.7.2
 ENV GIT_BRANCH prerelease
 ENV REPO_FRAMEWORK "https://github.com/UiharuKazari2008/kanmi"
 ENV REPO_WEB "https://github.com/UiharuKazari2008/sequenzia"
+ENV REPO_INDEX "https://github.com/UiharuKazari2008/sequenzia-intellidex"
 ENV REPO_WATCHDOG "https://github.com/UiharuKazari2008/kanmi-watchdog"
 ENV REPO_RANDOMIZER "https://github.com/UiharuKazari2008/sequenzia-random-bot"
 
@@ -29,10 +30,12 @@ RUN apt update && apt install -y git curl wget ffmpeg libcairo2-dev libpango1.0-
 
 RUN git clone -b $GIT_BRANCH "$REPO_FRAMEWORK" /across/sequenzia-framework && \
     git clone -b $GIT_BRANCH "$REPO_WEB" /across/sequenzia-web && \
+    git clone "$REPO_INDEX" /across/sequenzia-intellidex && \
     git clone "$REPO_WATCHDOG" /across/watchdog && \
     git clone "$REPO_RANDOMIZER" /across/honey
 
-RUN cd /across/sequenzia-framework && git pull && npm install && cp -r ../.framework/* ./  && rm -rf ../.framework
-RUN cd /across/sequenzia-web && git pull && npm install && cp -r ../.web/* ./  && rm -rf ../.web
-RUN cd /across/watchdog && git pull && npm install && cp -r ../.watchdog/* ./  && rm -rf ../.watchdog
-RUN cd /across/honey && git pull && npm install && cp -r ../.honey/* ./  && rm -rf ../.honey
+RUN cd /across/sequenzia-framework && npm install && cp -r ../.framework/* ./ && rm -rf ../.framework
+RUN cd /across/sequenzia-web && npm install && cp -r ../.web/* ./
+RUN cd /across/sequenzia-intellidex && npm install && cp -r ../.web/*.json ./ && rm -rf ../.web
+RUN cd /across/watchdog && npm install && cp -r ../.watchdog/* ./ && rm -rf ../.watchdog
+RUN cd /across/honey && npm install && cp -r ../.honey/* ./ && rm -rf ../.honey

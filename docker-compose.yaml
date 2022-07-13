@@ -39,6 +39,22 @@ services:
       - ./common/config/watchdog.user-config.json:/across/watchdog.user-config.json:ro
       - ./common/config/compliance_v20.sql:/across/compliance_v20.sql:ro
     restart: on-failure
+  intellidex:
+    build:
+      context: ./sequenzia-intellidex
+    env_file:
+      - ./common/config/user-config.env
+    networks:
+      kanmi_system:
+        aliases:
+          - idex.kanmi.acr
+    depends_on:
+      - database
+      - mq
+    volumes:
+      - ./common/data/:/data/
+      - ./common/config/user-config.json:/across/user-config.json:ro
+    restart: on-failure
   authware:
     build:
       context: ./kanmi-discord-authware
