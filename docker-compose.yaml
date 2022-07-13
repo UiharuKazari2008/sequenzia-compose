@@ -30,8 +30,6 @@ services:
       kanmi_system:
         aliases:
           - watchdog.kanmi.acr
-    depends_on:
-      - database
     volumes:
       - persistent_data:/across/watchdog/data
       - ./common/data/:/data/
@@ -48,9 +46,6 @@ services:
       kanmi_system:
         aliases:
           - idex.kanmi.acr
-    depends_on:
-      - database
-      - mq
     volumes:
       - ./common/data/:/data/
       - ./common/config/user-config.json:/across/user-config.json:ro
@@ -65,9 +60,6 @@ services:
       kanmi_system:
         aliases:
           - authware.kanmi.acr
-    depends_on:
-      - database
-      - mq
     volumes:
       - persistent_data:/across/sequenzia-framework/data
       - ./common/config/setup-authware.env:/across/setup-authware.env
@@ -81,10 +73,6 @@ services:
       kanmi_system:
         aliases:
           - framework.kanmi.acr
-    depends_on:
-      - database
-      - mq
-      - authware
     volumes:
       - persistent_data:/across/sequenzia-framework/data
       - ./common/config/user-config.json:/across/user-config.json:ro
@@ -97,10 +85,6 @@ services:
       kanmi_system:
         aliases:
           - fileworker.kanmi.acr
-    depends_on:
-      - database
-      - mq
-      - authware
     volumes:
       - persistent_data:/across/sequenzia-framework/data
       - ./common/config/user-config.json:/across/user-config.json:ro
