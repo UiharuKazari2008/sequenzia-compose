@@ -86,6 +86,11 @@ docker compose -f docker-compose.yaml -f docker-compose-share.yaml up
 This will provide a Windows Share that you can access or mount as a Network Drive<br/>
 `\\<IPADDRESS>\upload`
 
+### Start with Remote Core Access
+**You should only use this if you are connecting another host to the Database and MQ backend.**<br/>
+```shell
+docker compose -f docker-compose.yaml -f docker-compose-external.yaml up
+```
 
 ### Update Base Image (When you modify files in /base or Unsupposted CPU Architecture)
 *Add `-f` for the extra modules you are trying to restart*
