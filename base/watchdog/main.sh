@@ -1,6 +1,5 @@
 #!/bin/sh
 /wait || exit
-#sh /across/watchdog/backup.sh || exit
 echo "Verifying Database Structure..."
 mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql
 if [ "$(jq -r '.Watchdog_Key' /across/user-config.json | wc -c)" -gt 20 ]; then
