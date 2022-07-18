@@ -154,3 +154,19 @@ CREATE TABLE IF NOT EXISTS `kongou_episodes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+CREATE TABLE IF NOT EXISTS kongou_watch_history
+(
+    usereid varchar(255)           not null,
+    user  varchar(128)           not null,
+    eid   int                    not null,
+    viewed float(6,5)    default 0 null,
+    date  datetime default NOW() not null,
+    constraint kongou_watch_history_pk
+        primary key (`key`),
+    constraint kongou_watch_history_discord_users_id_fk
+        foreign key (user) references discord_users (id)
+            on update cascade on delete cascade,
+    constraint kongou_watch_history_kanmi_records_eid_fk
+        foreign key (eid) references kanmi_records (eid)
+            on update cascade on delete cascade
+);
