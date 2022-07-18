@@ -163,9 +163,6 @@ CREATE TABLE IF NOT EXISTS kongou_watch_history
     date  datetime default NOW() not null,
     constraint kongou_watch_history_pk
         primary key (`usereid`),
-    constraint kongou_watch_history_discord_users_id_fk
-        foreign key (user) references discord_users (id)
-            on update cascade on delete cascade,
     constraint kongou_watch_history_kanmi_records_eid_fk
         foreign key (eid) references kanmi_records (eid)
             on update cascade on delete cascade
