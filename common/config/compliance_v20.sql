@@ -115,6 +115,7 @@ CREATE TABLE IF NOT EXISTS `kongou_shows` (
                                               `name` text NOT NULL,
                                               `original_name` text,
                                               `nsfw` tinyint(1) DEFAULT '0',
+                                              `subtitled` tinyint(1) default '0',
                                               `genres` text,
                                               `data` json DEFAULT NULL,
                                               `background` varchar(255) DEFAULT NULL,
@@ -167,3 +168,17 @@ CREATE TABLE IF NOT EXISTS kongou_watch_history
         foreign key (eid) references kanmi_records (eid)
             on update cascade on delete cascade
 );
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'subtitled'
+  AND table_name = 'kongou_shows';
+
+set @query = IF(@exist <= 0, 'ALTER TABLE kongou_shows add subtitled tinyint(1) default 0 null after nsfw;',
+                'select \'Column Exists\' status');
+
+prepare kongou_cc_add from @query;
+EXECUTE kongou_cc_add;
