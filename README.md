@@ -6,6 +6,8 @@ JuneFS is a Discord-backed Filesystem with large file support.
 
 This is a simple "turn-key" solution for the Kanmi x Sequenzia system. This is meant to be a getting started solution and is not meant for production applications. You should start here and then export the database and manually install the parts if you plan to have a larger and more production ready deployment.
 
+# Help Wanted
+Do you know NodeJS, HTML, JavaScript, Pug, CSS, SQL, etc? Please contact me on Discord `Yukimi Kazari#9854` to see how you can help the project (possible paid positions avalible)
 
 # NOTICE
 This is considered to be in active development and Dockerfiles and configurations can be changed on the fly to make this more reliable for the long term. Please allways check the CHANGELOG for the latest chnages and the Installation guide for the latest configuration.<br/>
