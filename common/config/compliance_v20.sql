@@ -12,11 +12,11 @@ prepare google_id_add from @query;
 EXECUTE google_id_add;
 
 CREATE TABLE IF NOT EXISTS `kanmi_records_extended` (
-  `eid` int NOT NULL,
-  `data` json DEFAULT NULL,
-  PRIMARY KEY (`eid`),
-  UNIQUE KEY `kanmi_records_extended_eid_uindex` (`eid`),
-  CONSTRAINT `kanmi_records_extended_kanmi_records_eid_fk` FOREIGN KEY (`eid`) REFERENCES `kanmi_records` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE
+                                                        `eid` int NOT NULL,
+                                                        `data` json DEFAULT NULL,
+                                                        PRIMARY KEY (`eid`),
+                                                        UNIQUE KEY `kanmi_records_extended_eid_uindex` (`eid`),
+                                                        CONSTRAINT `kanmi_records_extended_kanmi_records_eid_fk` FOREIGN KEY (`eid`) REFERENCES `kanmi_records` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -95,18 +95,18 @@ create table IF NOT EXISTS discord_users_extended
 );
 
 CREATE TABLE IF NOT EXISTS `discord_users_extended` (
-    `id` varchar(128) NOT NULL,
-    `data` json DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `discord_users_extended_id_uindex` (`id`)
+                                                        `id` varchar(128) NOT NULL,
+                                                        `data` json DEFAULT NULL,
+                                                        PRIMARY KEY (`id`),
+                                                        UNIQUE KEY `discord_users_extended_id_uindex` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `kanmi_records_extended` (
-    `eid` int NOT NULL,
-    `data` json DEFAULT NULL,
-    PRIMARY KEY (`eid`),
-    UNIQUE KEY `kanmi_records_extended_eid_uindex` (`eid`),
-    CONSTRAINT `kanmi_records_extended_kanmi_records_eid_fk` FOREIGN KEY (`eid`) REFERENCES `kanmi_records` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE
+                                                        `eid` int NOT NULL,
+                                                        `data` json DEFAULT NULL,
+                                                        PRIMARY KEY (`eid`),
+                                                        UNIQUE KEY `kanmi_records_extended_eid_uindex` (`eid`),
+                                                        CONSTRAINT `kanmi_records_extended_kanmi_records_eid_fk` FOREIGN KEY (`eid`) REFERENCES `kanmi_records` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `kongou_shows` (
@@ -131,6 +131,7 @@ CREATE TABLE IF NOT EXISTS `kongou_shows_maps` (
 CREATE TABLE IF NOT EXISTS `kongou_media_groups` (
                                                      `media_group` varchar(128) NOT NULL,
                                                      `type` int NOT NULL,
+                                                     `adult` tinyint(1) default 0 null,
                                                      `name` text NOT NULL,
                                                      `description` text,
                                                      `icon` varchar(128) NOT NULL,
@@ -139,19 +140,19 @@ CREATE TABLE IF NOT EXISTS `kongou_media_groups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `kongou_episodes` (
-    `eid` int NOT NULL,
-    `show_id` int NOT NULL,
-    `episode_num` int DEFAULT NULL,
-    `episode_name` text,
-    `season_num` int DEFAULT NULL,
-    `data` json DEFAULT NULL,
-    `background` varchar(255) DEFAULT NULL,
-    `still` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`eid`),
-    UNIQUE KEY `kongou_episodes_eid_uindex` (`eid`),
-    KEY `kongou_episodes_kongou_shows_show_id_fk` (`show_id`),
-    CONSTRAINT `kongou_episodes_kanmi_records_eid_fk` FOREIGN KEY (`eid`) REFERENCES `kanmi_records` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `kongou_episodes_kongou_shows_show_id_fk` FOREIGN KEY (`show_id`) REFERENCES `kongou_shows` (`show_id`) ON DELETE CASCADE ON UPDATE CASCADE
+                                                 `eid` int NOT NULL,
+                                                 `show_id` int NOT NULL,
+                                                 `episode_num` int DEFAULT NULL,
+                                                 `episode_name` text,
+                                                 `season_num` int DEFAULT NULL,
+                                                 `data` json DEFAULT NULL,
+                                                 `background` varchar(255) DEFAULT NULL,
+                                                 `still` varchar(255) DEFAULT NULL,
+                                                 PRIMARY KEY (`eid`),
+                                                 UNIQUE KEY `kongou_episodes_eid_uindex` (`eid`),
+                                                 KEY `kongou_episodes_kongou_shows_show_id_fk` (`show_id`),
+                                                 CONSTRAINT `kongou_episodes_kanmi_records_eid_fk` FOREIGN KEY (`eid`) REFERENCES `kanmi_records` (`eid`) ON DELETE CASCADE ON UPDATE CASCADE,
+                                                 CONSTRAINT `kongou_episodes_kongou_shows_show_id_fk` FOREIGN KEY (`show_id`) REFERENCES `kongou_shows` (`show_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -182,3 +183,16 @@ set @query = IF(@exist <= 0, 'ALTER TABLE kongou_shows add subtitled tinyint(1) 
 
 prepare kongou_cc_add from @query;
 EXECUTE kongou_cc_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'adult'
+  AND table_name = 'kongou_media_groups';
+
+set @query = IF(@exist <= 0, 'alter table kongou_media_groups add adult tinyint(1) default 0 null after type;',
+                'select \'Column Exists\' status');
+
+prepare kongou_mga_add from @query;
+EXECUTE kongou_mga_add;
