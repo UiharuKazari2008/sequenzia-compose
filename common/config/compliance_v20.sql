@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS `kongou_shows` (
                                               `data` json DEFAULT NULL,
                                               `background` varchar(255) DEFAULT NULL,
                                               `poster` varchar(255) DEFAULT NULL,
+                                              `search` text null,
                                               PRIMARY KEY (`show_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -196,3 +197,16 @@ set @query = IF(@exist <= 0, 'alter table kongou_media_groups add adult tinyint(
 
 prepare kongou_mga_add from @query;
 EXECUTE kongou_mga_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'search'
+  AND table_name = 'kongou_shows';
+
+set @query = IF(@exist <= 0, 'alter table kongou_shows add search text null;',
+                'select \'Column Exists\' status');
+
+prepare kongou_mss_add from @query;
+EXECUTE kongou_mss_add;
