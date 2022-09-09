@@ -34,20 +34,45 @@ This is considered to be in active development and Dockerfiles and configuration
 # Screenshots
 _Screenshots are from the production installation and may not refect a new installation and may show features that have not been documented yet_<br/>
 
-**Homepage**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 37 21" src="https://user-images.githubusercontent.com/15165770/177521828-654963fe-00d7-4af1-81ad-6e3a39b85ce3.png"><br/>
+**New v20 Homepage**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 37 21" src="https://user-images.githubusercontent.com/15165770/189299827-222fcba0-82ca-4c89-89c7-6adf1086d429.png"><br/>
+**Ambient Homepage (When Idle)**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 37 21" src="https://user-images.githubusercontent.com/15165770/189300145-09082e34-ecc5-412e-83f1-0f592489d6a0.png"><br/>
 
-**Latest Media Gallery with Menu open**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 38 29" src="https://user-images.githubusercontent.com/15165770/177522138-5a526172-9047-4dba-af57-952db0e17097.png"><br/>
+**Loading Splash Screens**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 37 21" src="https://user-images.githubusercontent.com/15165770/189300505-550ff048-17bb-4d45-996c-c9ca6801427b.png"><br/>
 
-**Gallery of a channel**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 33 56" src="https://user-images.githubusercontent.com/15165770/177522385-3eca45e5-7f78-4cc6-ae86-1a69ac8dd260.png"><br/>
+**Channel Navigator**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 38 29" src="https://user-images.githubusercontent.com/15165770/189300983-6bb82653-ef86-4475-9efc-fb8e0a9cf532.png"><br/>
 
-**File list of a channel**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/177522643-54974aa3-fe8c-4f0a-ae7a-3eab94e9b207.png"><br/>
+**Media Gallery with Menu open**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 38 29" src="https://user-images.githubusercontent.com/15165770/189301232-4060d0fb-efc0-4c6c-9650-84b90746ad82.png"><br/>
 
-**Playback of a large video file by useing client-side file compiler (LB+CS-FC v1)**<br/>
-<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/177522920-93a36950-57d7-4043-9e52-e7067607ef87.png"><br/>
+**File Listing**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189301373-780b591c-d828-43dd-a56c-fc17e0f5cdf9.png"><br/>
+
+**NEW! Kongou Media Group**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189301559-14158bfd-80ca-47f4-b616-e703cae23473.png"><br/>
+
+**NEW! Kongou Series**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189301961-28fe2b94-eba8-4940-b6b5-08e1e35ff1d4.png"><br/>
+
+**NEW! Kongou Player (Building Video with Preview Playback**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189302200-d4839741-d135-428e-b15c-622aa504792c.png"><br/>
+
+**NEW! Kongou Player (Full Video Playback with Advanced Controls and Screenshot Tools**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189302413-f383b0f0-8e90-4416-bdf0-b18518a0bcd4.png"><br/>
+
+**NEW! Offline Access**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189303072-50cb5afe-bb7e-46c8-878d-1c780aa7c01f.png"><br/>
+
+**NEW! Offline Gallery**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189303223-d26070b5-7c06-479a-a6b2-e181e4c96a57.png"><br/>
+
+**External Application (Lizumi Web)**<br/>
+<img width="1572" alt="Screen Shot 2022-07-04 at 19 54 04" src="https://user-images.githubusercontent.com/15165770/189303635-2f9b276d-d889-43f2-8213-c1189409466b.png"><br/>
+
+
 
 ## I NEED HELP!
 If you need with Sequenzia, you can message me on Discord `Yukimi Kazari#9854`. Otherwise if it's a issue, report it on GitHub as i cant keep track of comment off hand im very busy...
