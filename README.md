@@ -21,6 +21,8 @@ This is considered to be in active development and Dockerfiles and configuration
 * File uploader with watch folders that are liked to channels
 * Modern HTML5 Web interface for accessing and managing files
   - Supports Chrome and Apple WebKit
+* Offline Access
+* Kongou Media Manager and Player
 * Client-side file compiler (LB+CS-FC) in browser
   - Allows large files that have been split into parity to be build on the client side browser
   - This reduces server load and makes the end user the bearer of the file
