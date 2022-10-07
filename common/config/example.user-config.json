@@ -1,0 +1,18 @@
+{
+  "Discord_Key": "",
+  "Watchdog_Key": "",
+  "Authware_Key": "",
+  "DiscordHomeGuild": "",
+  "discord_id": "",
+  "discord_secret": "",
+  "base_url": "https://example.tokyo",
+  "cookie_secret": "DockerKanmi@CHANGETHISDAMNSECRET",
+  "enable_impersonation": true,
+  "use_secure_cookie": true,
+  "site_name": "Sequenzia",
+  "company_name": "Academy City Research",
+  "company_email": "sequenzia@example.com",
+  "support_lines" : [
+    "No Support Available"
+  ]
+}
