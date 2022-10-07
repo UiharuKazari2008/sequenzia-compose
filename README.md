@@ -6,11 +6,10 @@ JuneFS is a Discord-backed Filesystem with large file support.
 
 This is a simple "turn-key" solution for the Kanmi x Sequenzia system. This is meant to be a getting started solution and is not meant for production applications. You should start here and then export the database and manually install the parts if you plan to have a larger and more production ready deployment.
 
+This is currently based and locked on Sequenzia v20, For the bleading edge use the "development" branch and for testing updates that are soon to be released use the "prerelease" branch.
+
 # Help Wanted
 Do you know NodeJS, HTML, JavaScript, Pug, CSS, SQL, etc? Please contact me on Discord `Yukimi Kazari#9854` to see how you can help the project (possible paid positions avalible)
-
-# NOTICE
-This is considered to be in active development and Dockerfiles and configurations can be changed on the fly to make this more reliable for the long term. Please allways check the CHANGELOG for the latest chnages and the Installation guide for the latest configuration.<br/>
 
 # Features
 * Human-readable Discord Filesystem
@@ -89,28 +88,28 @@ Sequenzia is not a single project or system but multiple separate projects.
 ## Quick Commands
 ### Start Server:
 ```shell
-docker compose up -d
+./sequenzia start
 ```
 
 ### Stop Server
 ```shell
-docker compose down
+./sequenzia stop
 ```
 
 ### Update Server
-*Add `-f` for the extra modules you are trying to restart*
+*Use reinit instead to completely restart the modules*
 ```shell
-docker compose restart
+./sequenzia restart
 ```
 
 ### Start with Web Desktop for SQL Administration
 ```shell
-docker compose -f docker-compose.yaml -f docker-compose-manager.yaml up
+./sequenzia start manager
 ```
 
 ### Start with Windows Share
 ```shell
-docker compose -f docker-compose.yaml -f docker-compose-share.yaml up
+./sequenzia start samba
 ```
 This will provide a Windows Share that you can access or mount as a Network Drive<br/>
 `\\<IPADDRESS>\upload`
@@ -118,11 +117,11 @@ This will provide a Windows Share that you can access or mount as a Network Driv
 ### Start with Remote Core Access
 **You should only use this if you are connecting another host to the Database and MQ backend.**<br/>
 ```shell
-docker compose -f docker-compose.yaml -f docker-compose-external.yaml up
+./sequenzia start external
 ```
 
 ### Update Base Image (When you modify files in /base or Unsupposted CPU Architecture)
 *Add `-f` for the extra modules you are trying to restart*
 ```shell
-sh base/build-base.sh
+./sequenzia fbuild
 ```
