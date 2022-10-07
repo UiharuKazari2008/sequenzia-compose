@@ -1,5 +1,5 @@
 services:
-  kanni-fileworker-share:
+  kanmi-fileworker-share:
       image: joebiellik/samba-server
       environment:
         USERNAME: admin

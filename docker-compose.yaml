@@ -107,6 +107,10 @@ services:
       - ./common/config/user-config.json:/across/user-config.json:ro
       - ./common/data/:/data/
     restart: on-failure
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   kanmi_system:

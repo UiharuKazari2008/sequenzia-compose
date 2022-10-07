@@ -1,0 +1,168 @@
+#!/bin/sh
+
+echo "Sequenzia Server Control"
+
+if [ -n "$1" ]
+then
+	case "$1" in
+		start)
+			if [ -n "$2" ]
+			then
+				case "$2" in
+					core) docker compose up database mq framework authware -d;;
+					test-core) docker compose up database mq framework authware;;
+					core-external)
+						echo "Starting with Backend SQL and MQ ports exposed!";
+						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up database mq framework authware -d;;
+					external)
+						echo "Starting with Backend SQL and MQ ports exposed!";
+						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up -d;;
+					uploader) docker compose up framework fileworker -d;;
+					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml up kanmi-fileworker-share -d;;
+					noproxy) docker compose up -d;;
+					test) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up;;
+					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d;;
+				esac
+			else
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up -d
+			fi
+			;;
+		stop)
+			if [ -n "$2" ]
+			then
+				case "$2" in
+					core) docker compose stop framework authware -d;;
+					core-external)
+						docker compose -f docker-compose.yaml -f docker-compose-external.yaml stop database mq authware framework;;
+					external);;
+			    uploader) docker compose stop framework fileworker -d;;
+					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml stop kanmi-fileworker-share -d;;
+					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
+				esac
+			else
+				docker exec -it sequenzia-compose-database-1 sh /backup.sh;
+			fi
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+			;;
+		restart)
+			if [ -n "$2" ]
+			then
+				case "$2" in
+					core) docker compose restart framework authware -d;;
+					core-external)
+						echo "Restarting with Backend SQL and MQ ports exposed!";
+						docker compose -f docker-compose.yaml -f docker-compose-external.yaml restart database mq authware framework;;
+					external)
+						echo "Starting with Backend SQL and MQ ports exposed!";
+						docker compose -f docker-compose.yaml -f docker-compose-external.yaml restart -d;;
+				  uploader) docker compose restart framework fileworker -d;;
+					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml restart kanmi-fileworker-share -d;;
+					noproxy) docker compose restart -d;;
+					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml restart $2 -d;;
+				esac
+			else
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml restart
+			fi
+			;;
+		reinit)
+			if [ -n "$2" ]
+			then
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+				case "$2" in
+					core) docker compose up database mq framework authware -d;;
+					core-external)
+						echo "Starting with Backend SQL and MQ ports exposed!";
+						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up database mq framework authware -d;;
+					external)
+						echo "Starting with Backend SQL and MQ ports exposed!";
+						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up -d;;
+					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml up kanmi-fileworker-share -d;;
+					uploader) docker compose up framework fileworker -d;;
+					noproxy) docker compose up -d;;
+					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d;;
+				esac
+			else
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up -d
+			fi
+			;;
+		config) nano common/config/user-config.json ;;
+		env) nano common/config/user-config.env ;;
+		setupaw) nano common/config/setup-authware.env ;;
+		status) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml ps;;
+		logs) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml logs -f;;
+		certgen)
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
+			docker exec -it sequenzia-compose-frontend-1 openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=example.tokyo" -addext "subjectAltName=DNS:example.tokyo" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  stop frontend &&
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  up frontend -d &&
+			echo "IMPORTANT! MAC OS handles self signed certificates poorly and you will have to get a real certificate from certbot once your ready to complete";;
+		update)
+			git pull &&
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+			docker compose build --no-cache &&
+			docker system prune -f &&
+			echo "################################################################" &&
+			echo "Update Completed Successfully" &&
+			echo "################################################################" &&
+			echo "" &&
+			echo "Please use your appropriate start command or just use 'start'"
+			;;
+		build)
+			if [ -n "$2" ]
+			then
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 &&
+				docker compose build --no-cache $2 &&
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d &&
+				docker system prune -f &&
+				echo "################################################################" &&
+				echo "Build of $2 Completed Successfully and Restarted" &&
+				echo "################################################################"
+			else
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+				docker system prune -f &&
+				docker compose build --no-cache &&
+				echo "################################################################" &&
+				echo "Build Completed Successfully" &&
+				echo "################################################################" &&
+				echo "" &&
+				echo "Please use your appropriate start command or just use 'start'"
+			fi
+			;;
+		fbuild)
+			git pull &&
+			docker build --no-cache -t kihara/across-base:latest ./base &&
+			docker tag kihara/across-base:latest kihara/across-base:v20 &&
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+			docker compose build --no-cache &&
+			docker system prune -f &&
+			echo "################################################################" &&
+			echo "Build Completed Successfully" &&
+			echo "################################################################" &&
+			echo "" &&
+			echo "Please use your appropriate start command or just use 'start'"
+			;;
+		backup) docker exec -it sequenzia-compose-database-1 sh /backup.sh;;
+		upload) docker exec -it sequenzia-compose-database-1 sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup;;
+		*) echo "$1 is not an valid command" ;;
+	esac
+else
+	echo ""
+	echo "start   - Start the server or services"
+	echo "restart - Restart the server or services"
+	echo "reinit  - Full Restart the server or services"
+	echo "stop    - Shutdown the server or services"
+	echo "status  - Status of operations"
+	echo "logs    - View active logs"
+	echo ""
+	echo "config  - Edit User Configuration File"
+	echo "env     - Edit User Environment File"
+	echo "setupaw - Edit AuthWare Configuration File"
+	echo ""
+	echo "update  - Update to latest version"
+	echo "build   - Rebuild Element(s) and Reload Static Files"
+	echo "fbuild  - Rebuild ACROSS, Update base files, and Build Elements"
+	echo "certgen - Generate New Default SSL Certificates"
+	echo ""
+	echo "upload  - Backup Database to Discord #backup Channel"
+	echo "backup  - Backup Database to /common/data/backup"
+fi

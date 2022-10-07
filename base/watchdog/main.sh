@@ -8,6 +8,7 @@ if [ "$(jq -r '.Watchdog_Key' /across/user-config.json | wc -c)" -gt 20 ]; then
 	cd /across/watchdog || exit
 	node js/index.js
 else
-	echo "Watchdog is not configured and will be bypassed"
+	echo "## Watchdog is not configured and will be bypassed ##"
+	echo "## Please refer to the documentation on configuration ##"
 	tail -f /dev/null
 fi
