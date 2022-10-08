@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Sequenzia Server Control"
+echo "Sequenzia Server Control (Alpha)"
 
 if [ -n "$1" ]
 then
@@ -37,12 +37,12 @@ then
 					external);;
 			    uploader) docker compose stop framework fileworker -d;;
 					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml stop kanmi-fileworker-share -d;;
-					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
+					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
 				esac
 			else
 				docker exec -it sequenzia-compose-database-1 sh /backup.sh;
 			fi
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
 			;;
 		restart)
 			if [ -n "$2" ]
@@ -67,7 +67,7 @@ then
 		reinit)
 			if [ -n "$2" ]
 			then
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
 				case "$2" in
 					core) docker compose up database mq framework authware -d;;
 					core-external)
@@ -82,6 +82,7 @@ then
 					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d;;
 				esac
 			else
+			  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
 				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up -d
 			fi
 			;;
@@ -141,8 +142,49 @@ then
 			echo "" &&
 			echo "Please use your appropriate start command or just use 'start'"
 			;;
-		backup) docker exec -it sequenzia-compose-database-1 sh /backup.sh;;
-		upload) docker exec -it sequenzia-compose-database-1 sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup;;
+		backup)
+		  docker compose up database -d &&
+		  docker exec -it sequenzia-compose-database-1 sh /backup.sh;;
+		restore)
+		  cp "$(ls -Art ./common/data/backup/database-* | tail -n 1)" ./common/data/backup/restore.sqldump.bz2;
+		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+		  docker compose up database -d &&
+		  docker exec -it sequenzia-compose-database-1 sh /restore.sh &&
+		  echo "You can now start Sequenzia normally!";;
+		export)
+		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+      docker compose up database -d &&
+      docker exec -it sequenzia-compose-database-1 sh /backup.sh kickstart.sql &&
+      tar --exclude=./common/config/compliance* \
+      --exclude=./common/config/example.*  \
+      --exclude=./common/data/upload \
+      --exclude=./common/data/.temp \
+      --exclude=./common/data/.web-upload \
+      --exclude=./common/data/backup/database-* \
+      -cvjf "./sequenzia-kickstart-$(date +%Y-%m-%d_%H-%M).tar.bz2" \
+      ./common/data/ \
+      ./common/config/ \
+      ./common/well-known/ \
+      ./common/persistent/ \
+      ./common/ssl/ &&
+      rm ./common/data/backup/kickstart.sql &&
+      docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+      echo "Export Completed, Please take the kickstart file to your new server!";;
+		import)
+      if [ "$(ls -Art ./sequenzia-kickstart* | wc -l)" -gt 0 ]; then
+  		  tar xvf "$(ls -Art ./sequenzia-kickstart* | tail -n 1)" &&
+	  	  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+		    docker compose build --no-cache &&
+		    docker compose up database -d &&
+  		  docker exec -it sequenzia-compose-database-1 sh /restore.sh kickstart.sql
+	  	  rm ./common/data/backup/kickstart.sql &&
+		    echo "Import Completed, Ready to start Sequenzia!"
+		  else
+        echo "No kickstart file found!"
+      fi;;
+		upload)
+		  docker compose up database -d &&
+		  docker exec -it sequenzia-compose-database-1 sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup;;
 		*) echo "$1 is not an valid command" ;;
 	esac
 else
@@ -159,10 +201,15 @@ else
 	echo "setupaw - Edit AuthWare Configuration File"
 	echo ""
 	echo "update  - Update to latest version"
+	#echo "refresh - Update to latest commit (Non-Persistent)"
 	echo "build   - Rebuild Element(s) and Reload Static Files"
 	echo "fbuild  - Rebuild ACROSS, Update base files, and Build Elements"
 	echo "certgen - Generate New Default SSL Certificates"
 	echo ""
 	echo "upload  - Backup Database to Discord #backup Channel"
 	echo "backup  - Backup Database to /common/data/backup"
+	echo "restore - Restore last Database from /common/data/backup"
+	echo ""
+	echo "export  - Export Kickstart Tarball"
+	echo "import  - Import Kickstart Tarball"
 fi

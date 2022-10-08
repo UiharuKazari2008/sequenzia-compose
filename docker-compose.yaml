@@ -1,15 +1,17 @@
 services:
   database:
-    image: mysql:8-oracle
+    image: kihara/across-database:v20
+    build:
+      context: ./database
     env_file: ./common/config/user-config.env
+    environment:
+      WAIT_HOSTS: '127.0.0.1:3306'
     networks:
       kanmi_system:
         aliases:
           - sql.backend.acr
     volumes:
       - ./common/data/backup/:/backup/
-      - ./base/backup.sh:/backup.sh:ro
-      - ./base/base_v20.sql:/docker-entrypoint-initdb.d/setup.sql
       - db_data:/var/lib/mysql
     restart: unless-stopped
   mq:

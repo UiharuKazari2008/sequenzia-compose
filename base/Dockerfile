@@ -41,4 +41,4 @@ RUN apt update && apt install -y git curl wget ffmpeg libcairo2-dev libpango1.0-
     git clone -b $BRANCH_WATCHDOG "$REPO_WATCHDOG" /across/watchdog && \
     cd /across/watchdog && npm install && cp -r ../.watchdog/* ./ && rm -rf ../.watchdog && \
     git clone -b $BRANCH_RANDOMIZER "$REPO_RANDOMIZER" /across/honey && \
-    cd /across/honey && npm install && cp -r ../.honey/* ./ && rm -rf ../.honey \
+    cd /across/honey && npm install && cp -r ../.honey/* ./ && rm -rf ../.honey
