@@ -40,7 +40,7 @@ then
 					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
 				esac
 			else
-				docker exec -it sequenzia-compose-database-1 sh /backup.sh;
+				docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh;
 			fi
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
 			;;
@@ -93,7 +93,7 @@ then
 		logs) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml logs -f;;
 		certgen)
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
-			docker exec -it sequenzia-compose-frontend-1 openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=example.tokyo" -addext "subjectAltName=DNS:example.tokyo" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
+			docker exec -it "$(docker compose ps frontend | tail -n +2 | awk '{ print $1 }')" openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=example.tokyo" -addext "subjectAltName=DNS:example.tokyo" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  stop frontend &&
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  up frontend -d &&
 			echo "IMPORTANT! MAC OS handles self signed certificates poorly and you will have to get a real certificate from certbot once your ready to complete";;
@@ -144,17 +144,20 @@ then
 			;;
 		backup)
 		  docker compose up database -d &&
-		  docker exec -it sequenzia-compose-database-1 sh /backup.sh;;
+		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh
+		  echo "DANGER!!! BACKUP FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
+      echo "YOU ARE RESPONSIBLE FOR THE SECURITY OF THESE FILES, ACADEMY CITY RESEARCH AND DIGITAL ARTIFACTS LLC"
+      echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF BACKUP FILES";;
 		restore)
 		  cp "$(ls -Art ./common/data/backup/database-* | tail -n 1)" ./common/data/backup/restore.sqldump.bz2;
 		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
 		  docker compose up database -d &&
-		  docker exec -it sequenzia-compose-database-1 sh /restore.sh &&
+		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /restore.sh &&
 		  echo "You can now start Sequenzia normally!";;
 		export)
 		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
       docker compose up database -d &&
-      docker exec -it sequenzia-compose-database-1 sh /backup.sh kickstart.sql &&
+      docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh kickstart.sql &&
       tar --exclude=./common/config/compliance* \
       --exclude=./common/config/example.*  \
       --exclude=./common/data/upload \
@@ -169,14 +172,18 @@ then
       ./common/ssl/ &&
       rm ./common/data/backup/kickstart.sql &&
       docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
-      echo "Export Completed, Please take the kickstart file to your new server!";;
+      echo "Export Completed, Please take the kickstart file to your new server or store this for later!"
+      echo ""
+      echo "DANGER!!! KICKSTART FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
+      echo "YOU ARE RESPONSIBLE FOR THE SECURITY OF THESE FILES, ACADEMY CITY RESEARCH AND DIGITAL ARTIFACTS LLC"
+      echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF KICKSTART FILES";;
 		import)
       if [ "$(ls -Art ./sequenzia-kickstart* | wc -l)" -gt 0 ]; then
   		  tar xvf "$(ls -Art ./sequenzia-kickstart* | tail -n 1)" &&
 	  	  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
 		    docker compose build --no-cache &&
 		    docker compose up database -d &&
-  		  docker exec -it sequenzia-compose-database-1 sh /restore.sh kickstart.sql
+  		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /restore.sh kickstart.sql
 	  	  rm ./common/data/backup/kickstart.sql &&
 		    echo "Import Completed, Ready to start Sequenzia!"
 		  else
@@ -184,7 +191,12 @@ then
       fi;;
 		upload)
 		  docker compose up database -d &&
-		  docker exec -it sequenzia-compose-database-1 sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup;;
+		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup
+		  echo "The backup file should now be uploading to Sequenzia's Backup folder."
+		  echo "If you removed that folder then your in big fucking trouble, because it will upload to the data channel..."
+		  echo "DANGER!!! BACKUP FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
+      echo "YOU ARE RESPONSIBLE FOR THE SECURITY OF THESE FILES, ACADEMY CITY RESEARCH AND DIGITAL ARTIFACTS LLC"
+      echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF BACKUP FILES";;
 		*) echo "$1 is not an valid command" ;;
 	esac
 else
