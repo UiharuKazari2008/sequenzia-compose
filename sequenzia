@@ -37,12 +37,12 @@ then
 					external);;
 			    uploader) docker compose stop framework fileworker -d;;
 					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml stop kanmi-fileworker-share -d;;
-					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
+					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
 				esac
 			else
 				docker exec -it sequenzia-compose-database-1 sh /backup.sh;
 			fi
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
 			;;
 		restart)
 			if [ -n "$2" ]
@@ -67,7 +67,7 @@ then
 		reinit)
 			if [ -n "$2" ]
 			then
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml ˚-f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
 				case "$2" in
 					core) docker compose up database mq framework authware -d;;
 					core-external)
