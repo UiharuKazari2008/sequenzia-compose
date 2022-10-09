@@ -145,8 +145,6 @@ then
 		  docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git checkout prerelease" &&
 		  if [ "$(git rev-parse --abbrev-ref HEAD)" == "prerelease" ]; then
         docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
-        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
-        docker compose restart watchdog &&
         docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
         docker compose restart authware &&
         docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
@@ -171,6 +169,7 @@ then
 			echo "" &&
 			echo "Please use your appropriate start command or just use 'start'"
 			;;
+		publish) docker push kihara/across-base:latest && docker push kihara/across-base:v20;;
 		backup)
 		  docker compose up database -d &&
 		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh
@@ -230,12 +229,12 @@ then
 	esac
 else
 	echo ""
-	echo "start      - Start the server or services"
-	echo "restart    - Restart the server or services"
-	echo "reinit     - Full Restart the server or services"
-	echo "stop       - Shutdown the server or services"
+	echo "start      - Start service(s)"
+	echo "restart    - Restart service(s)"
+	echo "reset      - Reset (down/up) service(s)"
+	echo "stop       - Shutdown service(s)"
 	echo "status     - Status of operations"
-	echo "logs       - View active logs"
+	echo "logs       - View live service logs"
 	echo ""
 	echo "config     - Edit User Configuration File"
 	echo "env        - Edit User Environment File"
@@ -246,6 +245,7 @@ else
 	echo "prerelease - Update to latest prerelease commit (Non-Persistent)"
 	echo "build      - Rebuild Element(s) and Reload Static Files"
 	echo "fbuild     - Rebuild ACROSS, Update base files, and Build Elements"
+	echo "publish    - Publish ACROSS Images (Contributors Only)"
 	echo "certgen    - Generate New Default SSL Certificates"
 	echo ""
 	echo "upload     - Backup Database to Discord #backup Channel"
