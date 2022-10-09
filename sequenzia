@@ -40,7 +40,7 @@ then
 					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
 				esac
 			else
-				docker exec -it sequenzia-compose-database-1 sh /backup.sh;
+				docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh;
 			fi
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
 			;;
@@ -93,7 +93,7 @@ then
 		logs) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml logs -f;;
 		certgen)
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
-			docker exec -it sequenzia-compose-frontend-1 openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=example.tokyo" -addext "subjectAltName=DNS:example.tokyo" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
+			docker exec -it "$(docker compose ps frontend | tail -n +2 | awk '{ print $1 }')" openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=example.tokyo" -addext "subjectAltName=DNS:example.tokyo" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  stop frontend &&
 			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  up frontend -d &&
 			echo "IMPORTANT! MAC OS handles self signed certificates poorly and you will have to get a real certificate from certbot once your ready to complete";;
@@ -129,6 +129,33 @@ then
 				echo "Please use your appropriate start command or just use 'start'"
 			fi
 			;;
+		refresh)
+		  echo "Updating to latest commit..."
+		  docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
+      docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker compose restart authware &&
+      docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker compose restart framework &&
+      docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker compose restart fileworker &&
+      docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git pull" &&
+      docker compose restart web;;
+		prerelease)
+		  echo "Updating to latest prerelease commit..."
+		  docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git checkout prerelease" &&
+		  if [ "$(git rev-parse --abbrev-ref HEAD)" == "prerelease" ]; then
+        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
+        docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
+        docker compose restart authware &&
+        docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
+        docker compose restart framework &&
+        docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
+        docker compose restart fileworker &&
+        docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git checkout prerelease" &&
+        docker compose restart web
+      else
+        echo "Please run 'git checkout prerelease' to update the compose scripts. This is to ensure that the latest compliance file is used (if needed)."
+      fi;;
 		fbuild)
 			git pull &&
 			docker build --no-cache -t kihara/across-base:latest ./base &&
@@ -142,19 +169,23 @@ then
 			echo "" &&
 			echo "Please use your appropriate start command or just use 'start'"
 			;;
+		publish) docker push kihara/across-base:latest && docker push kihara/across-base:v20;;
 		backup)
 		  docker compose up database -d &&
-		  docker exec -it sequenzia-compose-database-1 sh /backup.sh;;
+		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh
+		  echo "DANGER!!! BACKUP FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
+      echo "YOU ARE RESPONSIBLE FOR THE SECURITY OF THESE FILES, ACADEMY CITY RESEARCH AND DIGITAL ARTIFACTS LLC"
+      echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF BACKUP FILES";;
 		restore)
 		  cp "$(ls -Art ./common/data/backup/database-* | tail -n 1)" ./common/data/backup/restore.sqldump.bz2;
 		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
 		  docker compose up database -d &&
-		  docker exec -it sequenzia-compose-database-1 sh /restore.sh &&
+		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /restore.sh &&
 		  echo "You can now start Sequenzia normally!";;
 		export)
 		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
       docker compose up database -d &&
-      docker exec -it sequenzia-compose-database-1 sh /backup.sh kickstart.sql &&
+      docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh kickstart.sql &&
       tar --exclude=./common/config/compliance* \
       --exclude=./common/config/example.*  \
       --exclude=./common/data/upload \
@@ -169,14 +200,18 @@ then
       ./common/ssl/ &&
       rm ./common/data/backup/kickstart.sql &&
       docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
-      echo "Export Completed, Please take the kickstart file to your new server!";;
+      echo "Export Completed, Please take the kickstart file to your new server or store this for later!"
+      echo ""
+      echo "DANGER!!! KICKSTART FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
+      echo "YOU ARE RESPONSIBLE FOR THE SECURITY OF THESE FILES, ACADEMY CITY RESEARCH AND DIGITAL ARTIFACTS LLC"
+      echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF KICKSTART FILES";;
 		import)
       if [ "$(ls -Art ./sequenzia-kickstart* | wc -l)" -gt 0 ]; then
   		  tar xvf "$(ls -Art ./sequenzia-kickstart* | tail -n 1)" &&
 	  	  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
 		    docker compose build --no-cache &&
 		    docker compose up database -d &&
-  		  docker exec -it sequenzia-compose-database-1 sh /restore.sh kickstart.sql
+  		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /restore.sh kickstart.sql
 	  	  rm ./common/data/backup/kickstart.sql &&
 		    echo "Import Completed, Ready to start Sequenzia!"
 		  else
@@ -184,32 +219,39 @@ then
       fi;;
 		upload)
 		  docker compose up database -d &&
-		  docker exec -it sequenzia-compose-database-1 sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup;;
+		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup
+		  echo "The backup file should now be uploading to Sequenzia's Backup folder."
+		  echo "If you removed that folder then your in big fucking trouble, because it will upload to the data channel..."
+		  echo "DANGER!!! BACKUP FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
+      echo "YOU ARE RESPONSIBLE FOR THE SECURITY OF THESE FILES, ACADEMY CITY RESEARCH AND DIGITAL ARTIFACTS LLC"
+      echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF BACKUP FILES";;
 		*) echo "$1 is not an valid command" ;;
 	esac
 else
 	echo ""
-	echo "start   - Start the server or services"
-	echo "restart - Restart the server or services"
-	echo "reinit  - Full Restart the server or services"
-	echo "stop    - Shutdown the server or services"
-	echo "status  - Status of operations"
-	echo "logs    - View active logs"
+	echo "start      - Start service(s)"
+	echo "restart    - Restart service(s)"
+	echo "reset      - Reset (down/up) service(s)"
+	echo "stop       - Shutdown service(s)"
+	echo "status     - Status of operations"
+	echo "logs       - View live service logs"
 	echo ""
-	echo "config  - Edit User Configuration File"
-	echo "env     - Edit User Environment File"
-	echo "setupaw - Edit AuthWare Configuration File"
+	echo "config     - Edit User Configuration File"
+	echo "env        - Edit User Environment File"
+	echo "setupaw    - Edit AuthWare Configuration File"
 	echo ""
-	echo "update  - Update to latest version"
-	#echo "refresh - Update to latest commit (Non-Persistent)"
-	echo "build   - Rebuild Element(s) and Reload Static Files"
-	echo "fbuild  - Rebuild ACROSS, Update base files, and Build Elements"
-	echo "certgen - Generate New Default SSL Certificates"
+	echo "update     - Update to latest version"
+	echo "refresh    - Update to latest commit (Non-Persistent)"
+	echo "prerelease - Update to latest prerelease commit (Non-Persistent)"
+	echo "build      - Rebuild Element(s) and Reload Static Files"
+	echo "fbuild     - Rebuild ACROSS, Update base files, and Build Elements"
+	echo "publish    - Publish ACROSS Images (Contributors Only)"
+	echo "certgen    - Generate New Default SSL Certificates"
 	echo ""
-	echo "upload  - Backup Database to Discord #backup Channel"
-	echo "backup  - Backup Database to /common/data/backup"
-	echo "restore - Restore last Database from /common/data/backup"
+	echo "upload     - Backup Database to Discord #backup Channel"
+	echo "backup     - Backup Database to /common/data/backup"
+	echo "restore    - Restore last Database from /common/data/backup"
 	echo ""
-	echo "export  - Export Kickstart Tarball"
-	echo "import  - Import Kickstart Tarball"
+	echo "export     - Export Kickstart Tarball"
+	echo "import     - Import Kickstart Tarball"
 fi
