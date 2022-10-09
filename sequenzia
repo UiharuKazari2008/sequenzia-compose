@@ -129,6 +129,35 @@ then
 				echo "Please use your appropriate start command or just use 'start'"
 			fi
 			;;
+		refresh)
+		  echo "Updating to latest commit..."
+		  docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
+      docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker compose restart authware &&
+      docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker compose restart framework &&
+      docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker compose restart fileworker &&
+      docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git pull" &&
+      docker compose restart web;;
+		prerelease)
+		  echo "Updating to latest prerelease commit..."
+		  docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git checkout prerelease" &&
+		  if [ "$(git rev-parse --abbrev-ref HEAD)" == "prerelease" ]; then
+        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
+        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
+        docker compose restart watchdog &&
+        docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
+        docker compose restart authware &&
+        docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
+        docker compose restart framework &&
+        docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
+        docker compose restart fileworker &&
+        docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git checkout prerelease" &&
+        docker compose restart web
+      else
+        echo "Please run 'git checkout prerelease' to update the compose scripts. This is to ensure that the latest compliance file is used (if needed)."
+      fi;;
 		fbuild)
 			git pull &&
 			docker build --no-cache -t kihara/across-base:latest ./base &&
@@ -201,27 +230,28 @@ then
 	esac
 else
 	echo ""
-	echo "start   - Start the server or services"
-	echo "restart - Restart the server or services"
-	echo "reinit  - Full Restart the server or services"
-	echo "stop    - Shutdown the server or services"
-	echo "status  - Status of operations"
-	echo "logs    - View active logs"
+	echo "start      - Start the server or services"
+	echo "restart    - Restart the server or services"
+	echo "reinit     - Full Restart the server or services"
+	echo "stop       - Shutdown the server or services"
+	echo "status     - Status of operations"
+	echo "logs       - View active logs"
 	echo ""
-	echo "config  - Edit User Configuration File"
-	echo "env     - Edit User Environment File"
-	echo "setupaw - Edit AuthWare Configuration File"
+	echo "config     - Edit User Configuration File"
+	echo "env        - Edit User Environment File"
+	echo "setupaw    - Edit AuthWare Configuration File"
 	echo ""
-	echo "update  - Update to latest version"
-	#echo "refresh - Update to latest commit (Non-Persistent)"
-	echo "build   - Rebuild Element(s) and Reload Static Files"
-	echo "fbuild  - Rebuild ACROSS, Update base files, and Build Elements"
-	echo "certgen - Generate New Default SSL Certificates"
+	echo "update     - Update to latest version"
+	echo "refresh    - Update to latest commit (Non-Persistent)"
+	echo "prerelease - Update to latest prerelease commit (Non-Persistent)"
+	echo "build      - Rebuild Element(s) and Reload Static Files"
+	echo "fbuild     - Rebuild ACROSS, Update base files, and Build Elements"
+	echo "certgen    - Generate New Default SSL Certificates"
 	echo ""
-	echo "upload  - Backup Database to Discord #backup Channel"
-	echo "backup  - Backup Database to /common/data/backup"
-	echo "restore - Restore last Database from /common/data/backup"
+	echo "upload     - Backup Database to Discord #backup Channel"
+	echo "backup     - Backup Database to /common/data/backup"
+	echo "restore    - Restore last Database from /common/data/backup"
 	echo ""
-	echo "export  - Export Kickstart Tarball"
-	echo "import  - Import Kickstart Tarball"
+	echo "export     - Export Kickstart Tarball"
+	echo "import     - Import Kickstart Tarball"
 fi
