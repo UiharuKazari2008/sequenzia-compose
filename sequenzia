@@ -143,7 +143,7 @@ then
 		prerelease)
 		  echo "Updating to latest prerelease commit..."
 		  docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git checkout prerelease" &&
-		  if [ "$(git rev-parse --abbrev-ref HEAD)" == "prerelease" ]; then
+		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then
         docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
         docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git checkout prerelease" &&
         docker compose restart authware &&
