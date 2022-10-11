@@ -150,7 +150,7 @@ then
       echo "";;
 		prerelease)
 		  echo "Updating to latest prerelease commit..."
-		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then
+		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then;
         docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/ && git fetch && git show-ref refs/heads/prerelease && git reset --hard origin/prerelease && npm install" &&
         docker compose restart watchdog &&
         sleep 5 &&
