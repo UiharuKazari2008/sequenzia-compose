@@ -136,13 +136,13 @@ then
       docker compose restart watchdog &&
       sleep 5 &&
 		  docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
-      docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
+      docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/; ${UPDATE_COMMAND}"  &&
       docker compose restart authware &&
-      docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
+      docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/; ${UPDATE_COMMAND}"  &&
       docker compose restart framework &&
-      docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
+      docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/; ${UPDATE_COMMAND}"  &&
       docker compose restart fileworker &&
-      docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}"  &&
+      docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/; ${UPDATE_COMMAND}"  &&
       docker compose restart web &&
       echo "################################################################" &&
       echo "Refresh Completed - This is NOT persistent and you will need to" &&
@@ -153,17 +153,17 @@ then
 		  echo "Updating to latest prerelease commit..."
 		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then
 		    UPDATE_COMMAND='git fetch; if [ -n "$(git show-ref refs/heads/prerelease)" ]; then; git reset --hard origin/prerelease && npm install; else; echo "No Prerelease Branch Available"; fi;'
-        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
+        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/; ${UPDATE_COMMAND}" &&
         docker compose restart watchdog &&
         sleep 5 &&
         docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
-        docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+        docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/; ${UPDATE_COMMAND}" &&
         docker compose restart authware &&
-        docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+        docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/; ${UPDATE_COMMAND}" &&
         docker compose restart framework &&
-        docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+        docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/; ${UPDATE_COMMAND}" &&
         docker compose restart fileworker &&
-        docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}" &&
+        docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/; ${UPDATE_COMMAND}" &&
         docker compose restart web &&
         echo "################################################################" &&
         echo "Prerelease Refresh Completed - So things may be broken..." &&
