@@ -236,7 +236,8 @@ then
       ./common/config/ \
       ./common/well-known/ \
       ./common/persistent/ \
-      ./common/ssl/ &&
+      ./common/ssl/ \
+      ./sequenzia-web/public &&
       rm ./common/data/backup/kickstart.sql &&
       full_stop &&
       echo "Export Completed, Please take the kickstart file to your new server or store this for later!"
