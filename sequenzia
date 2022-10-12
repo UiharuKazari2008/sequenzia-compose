@@ -17,7 +17,7 @@ then
 					external)
 						echo "Starting with Backend SQL and MQ ports exposed!";
 						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up -d;;
-					uploader) docker compose up framework fileworker -d;;
+					uploader) docker compose up framework mq fileworker -d;;
 					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml up kanmi-fileworker-share -d;;
 					noproxy) docker compose up -d;;
 					test) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up;;
@@ -35,7 +35,7 @@ then
 					core-external)
 						docker compose -f docker-compose.yaml -f docker-compose-external.yaml stop database mq authware framework;;
 					external);;
-			    uploader) docker compose stop framework fileworker -d;;
+			    uploader) docker compose stop framework mq fileworker -d;;
 					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml stop kanmi-fileworker-share -d;;
 					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
 				esac
@@ -55,7 +55,7 @@ then
 					external)
 						echo "Starting with Backend SQL and MQ ports exposed!";
 						docker compose -f docker-compose.yaml -f docker-compose-external.yaml restart -d;;
-				  uploader) docker compose restart framework fileworker -d;;
+				  uploader) docker compose restart framework mq fileworker -d;;
 					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml restart kanmi-fileworker-share -d;;
 					noproxy) docker compose restart -d;;
 					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml restart $2 -d;;
@@ -64,7 +64,7 @@ then
 				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml restart
 			fi
 			;;
-		reinit)
+		reset)
 			if [ -n "$2" ]
 			then
 				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
@@ -77,7 +77,7 @@ then
 						echo "Starting with Backend SQL and MQ ports exposed!";
 						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up -d;;
 					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml up kanmi-fileworker-share -d;;
-					uploader) docker compose up framework fileworker -d;;
+					uploader) docker compose up framework mq fileworker -d;;
 					noproxy) docker compose up -d;;
 					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d;;
 				esac
@@ -131,28 +131,46 @@ then
 			;;
 		refresh)
 		  echo "Updating to latest commit..."
+		  UPDATE_COMMAND='git fetch && git reset --hard origin && npm install'
+		  docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/ && " &&
+      docker compose restart watchdog &&
+      sleep 5 &&
 		  docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
-      docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
       docker compose restart authware &&
-      docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
       docker compose restart framework &&
-      docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git pull" &&
+      docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
       docker compose restart fileworker &&
-      docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git pull" &&
-      docker compose restart web;;
+      docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}"  &&
+      docker compose restart web &&
+      echo "################################################################" &&
+      echo "Refresh Completed - This is NOT persistent and you will need to" &&
+      echo "build to persistently update the images" &&
+      echo "################################################################" &&
+      echo "";;
 		prerelease)
 		  echo "Updating to latest prerelease commit..."
-		  docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git reset --hard origin/prerelease" &&
 		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then
+		    UPDATE_COMMAND='git fetch; [ "$(git show-ref prerelease | wc -l)" -eq 0 ] && echo "No Update Available" && exit 1 || git reset --hard "origin/prerelease" && npm install'
+        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
+        docker compose restart watchdog &&
+        sleep 5;
         docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
-        docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git reset --hard origin/prerelease" &&
-        docker compose restart authware &&
-        docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git reset --hard origin/prerelease" &&
-        docker compose restart framework &&
-        docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && git fetch && git reset --hard origin/prerelease" &&
-        docker compose restart fileworker &&
-        docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && git fetch && git reset --hard origin/prerelease" &&
-        docker compose restart web
+        docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+        docker compose restart authware;
+        docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+        docker compose restart framework;
+        docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+        docker compose restart fileworker;
+        docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}" &&
+        docker compose restart web;
+        echo "################################################################" &&
+        echo "Prerelease Refresh Completed - So things may be broken..." &&
+        echo "This is NOT persistent and you will need to update environment" &&
+        echo "file to use prerelease and build to persistently update the images" &&
+        echo "################################################################" &&
+        echo ""
       else
         echo "Please run 'git checkout prerelease' to update the compose scripts. This is to ensure that the latest compliance file is used (if needed)."
       fi;;
