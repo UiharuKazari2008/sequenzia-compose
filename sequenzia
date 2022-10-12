@@ -2,112 +2,111 @@
 
 echo "Sequenzia Server Control (Alpha)"
 
+# Using specific lines as config to prevent compatibility issues with using specific commands that are not supported by Win, Linux,and Unix.
+DCL=''
+DFL='-f docker-compose.yaml'
+getServices() {
+  for i in $(sed -n '1p' ./common/config/controller.dat 2> /dev/null || echo 'default proxy'); do
+    case "$i" in
+      default) ;;
+      core)
+        DCL="database mq framework authware";;
+      uploader)
+        DCL="mq framework fileworker";;
+      external)
+        echo "WARNING! Backend SQL and MQ ports are exposed!";
+        DFL="${DFL} -f docker-compose-external.yaml";;
+      manager)
+        DFL="${DFL} -f docker-compose-manager.yaml";;
+      proxy)
+        DFL="${DFL} -f docker-compose-frontend.yaml";;
+      samba)
+        DFL="${DFL} -f docker-compose-share.yaml";;
+      *)
+        DCL="${DCL} ${i}";;
+    esac
+  done
+}
+full_stop() {
+  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+}
+comp_name() {
+  docker compose ps $1 | tail -n +2 | awk '{ print $1 }'
+}
+is_running() {
+  case "$(comp_name $1)" in
+    no*) echo "y";;
+    *) echo "n";;
+  esac
+}
+
 if [ -n "$1" ]
 then
+  getServices;
+	# shellcheck disable=SC2086
 	case "$1" in
+		mode)
+		  if [ -n "$2" ]
+      then
+		    echo "$2" > ./common/config/controller.dat
+		  else
+		    echo "Current Operator Mode is: $(cat ./common/config/controller.dat 2> /dev/null || echo 'default proxy')"
+      fi
+		  ;;
+		test-core) docker compose up database mq framework authware;;
+		test)
+		  if [ -n "$2" ]
+		  then
+        docker compose ${DFL} up $2
+      else
+        docker compose ${DFL} up ${DCL}
+      fi;;
 		start)
-			if [ -n "$2" ]
-			then
-				case "$2" in
-					core) docker compose up database mq framework authware -d;;
-					test-core) docker compose up database mq framework authware;;
-					core-external)
-						echo "Starting with Backend SQL and MQ ports exposed!";
-						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up database mq framework authware -d;;
-					external)
-						echo "Starting with Backend SQL and MQ ports exposed!";
-						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up -d;;
-					uploader) docker compose up framework mq fileworker -d;;
-					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml up kanmi-fileworker-share -d;;
-					noproxy) docker compose up -d;;
-					test) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up;;
-					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d;;
-				esac
-			else
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up -d
-			fi
-			;;
+		  if [ -n "$2" ]
+		  then
+        docker compose ${DFL} up $2 -d
+      else
+        docker compose ${DFL} up ${DCL} -d
+      fi;;
 		stop)
-			if [ -n "$2" ]
-			then
-				case "$2" in
-					core) docker compose stop framework authware -d;;
-					core-external)
-						docker compose -f docker-compose.yaml -f docker-compose-external.yaml stop database mq authware framework;;
-					external);;
-			    uploader) docker compose stop framework mq fileworker -d;;
-					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml stop kanmi-fileworker-share -d;;
-					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 -d;;
-				esac
-			else
-				docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh;
-			fi
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
-			;;
+		  if [ -n "$2" ]
+      then
+        docker compose ${DFL} stop $2
+      else
+        full_stop
+      fi;;
 		restart)
-			if [ -n "$2" ]
-			then
-				case "$2" in
-					core) docker compose restart framework authware -d;;
-					core-external)
-						echo "Restarting with Backend SQL and MQ ports exposed!";
-						docker compose -f docker-compose.yaml -f docker-compose-external.yaml restart database mq authware framework;;
-					external)
-						echo "Starting with Backend SQL and MQ ports exposed!";
-						docker compose -f docker-compose.yaml -f docker-compose-external.yaml restart -d;;
-				  uploader) docker compose restart framework mq fileworker -d;;
-					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml restart kanmi-fileworker-share -d;;
-					noproxy) docker compose restart -d;;
-					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml restart $2 -d;;
-				esac
-			else
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml restart
-			fi
-			;;
+		  if [ -n "$2" ]
+      then
+        docker compose ${DFL} restart $2
+      else
+        docker compose ${DFL} restart ${DCL}
+      fi;;
 		reset)
 			if [ -n "$2" ]
 			then
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
-				case "$2" in
-					core) docker compose up database mq framework authware -d;;
-					core-external)
-						echo "Starting with Backend SQL and MQ ports exposed!";
-						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up database mq framework authware -d;;
-					external)
-						echo "Starting with Backend SQL and MQ ports exposed!";
-						docker compose -f docker-compose.yaml -f docker-compose-external.yaml up -d;;
-					samba) docker compose -f docker-compose.yaml -f docker-compose-share.yaml up kanmi-fileworker-share -d;;
-					uploader) docker compose up framework mq fileworker -d;;
-					noproxy) docker compose up -d;;
-					*) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d;;
-				esac
+				docker compose ${DFL} stop $2
+				docker compose ${DFL} rm $2
+				docker compose ${DFL} up $2 -d
 			else
-			  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up -d
-			fi
-			;;
+			  full_stop &&
+			  docker compose ${DFL} up ${DCL} -d;
+			fi;;
 		config) nano common/config/user-config.json ;;
 		env) nano common/config/user-config.env ;;
 		setupaw) nano common/config/setup-authware.env ;;
 		status) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml ps;;
 		logs) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml logs -f;;
 		certgen)
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
-			docker exec -it "$(docker compose ps frontend | tail -n +2 | awk '{ print $1 }')" openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=example.tokyo" -addext "subjectAltName=DNS:example.tokyo" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  stop frontend &&
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml  up frontend -d &&
-			echo "IMPORTANT! MAC OS handles self signed certificates poorly and you will have to get a real certificate from certbot once your ready to complete";;
-		update)
-			git pull &&
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
-			docker compose build --no-cache &&
-			docker system prune -f &&
-			echo "################################################################" &&
-			echo "Update Completed Successfully" &&
-			echo "################################################################" &&
-			echo "" &&
-			echo "Please use your appropriate start command or just use 'start'"
-			;;
+		  if [ "$(is_running web)" = "y" ] && [ "$(is_running frontend)" = "y" ]; then
+        docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
+        docker exec -it "$(docker compose ps frontend | tail -n +2 | awk '{ print $1 }')" openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=localhost" -addext "subjectAltName=DNS:localhost" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
+        docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml stop frontend &&
+        docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
+        echo "IMPORTANT! MAC OS handles self signed certificates poorly and you will have to get a real certificate from certbot once your ready to complete"
+			else
+			  echo "Web Server and Frontend are not running!"
+      fi;;
 		build)
 			if [ -n "$2" ]
 			then
@@ -119,31 +118,42 @@ then
 				echo "Build of $2 Completed Successfully and Restarted" &&
 				echo "################################################################"
 			else
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+				git pull &&
+				full_stop &&
 				docker system prune -f &&
 				docker compose build --no-cache &&
 				echo "################################################################" &&
 				echo "Build Completed Successfully" &&
 				echo "################################################################" &&
 				echo "" &&
-				echo "Please use your appropriate start command or just use 'start'"
+				docker compose ${DFL} up ${DCL} -d
 			fi
 			;;
 		refresh)
 		  echo "Updating to latest commit..."
 		  UPDATE_COMMAND='git fetch && git reset --hard origin && npm install'
-		  docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/ && " &&
-      docker compose restart watchdog &&
-      sleep 5 &&
-		  docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
-      docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
-      docker compose restart authware &&
-      docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
-      docker compose restart framework &&
-      docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
-      docker compose restart fileworker &&
-      docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}"  &&
-      docker compose restart web &&
+		  if [ "$(is_running watchdog)" = "y" ]; then
+        docker exec -it "$(comp_name watchdog)" sh -c "cd /across/watchdog/ && " &&
+        docker compose restart watchdog &&
+        sleep 5 &&
+        docker exec -it "$(comp_name watchdog)" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql';
+      fi
+      if [ "$(is_running authware)" = "y" ]; then
+        docker exec -it "$(comp_name authware)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
+        docker compose restart authware
+      fi
+      if [ "$(is_running framework)" = "y" ]; then
+        docker exec -it "$(comp_name framework)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
+        docker compose restart framework
+      fi
+      if [ "$(is_running fileworker)" = "y" ]; then
+        docker exec -it "$(comp_name fileworker)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"  &&
+        docker compose restart fileworker
+      fi
+      if [ "$(is_running web)" = "y" ]; then
+        docker exec -it "$(comp_name web)" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}"  &&
+        docker compose restart web
+      fi
       echo "################################################################" &&
       echo "Refresh Completed - This is NOT persistent and you will need to" &&
       echo "build to persistently update the images" &&
@@ -153,18 +163,28 @@ then
 		  echo "Updating to latest prerelease commit..."
 		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then
 		    UPDATE_COMMAND='git fetch; [ "$(git show-ref prerelease | wc -l)" -eq 0 ] && echo "No Update Available" && exit 1 || git reset --hard "origin/prerelease" && npm install'
-        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
-        docker compose restart watchdog &&
-        sleep 5;
-        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
-        docker exec -it "$(docker compose ps authware | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
-        docker compose restart authware;
-        docker exec -it "$(docker compose ps framework | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
-        docker compose restart framework;
-        docker exec -it "$(docker compose ps fileworker | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
-        docker compose restart fileworker;
-        docker exec -it "$(docker compose ps web | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}" &&
-        docker compose restart web;
+		    if [ "$(is_running watchdog)" = "y" ]; then
+          docker exec -it "$(comp_name watchdog)" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
+          docker compose restart watchdog &&
+          sleep 5;
+          docker exec -it "$(comp_name watchdog)" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql'
+        fi
+        if [ "$(is_running authware)" = "y" ]; then
+          docker exec -it "$(comp_name authware)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+          docker compose restart authware;
+        fi
+        if [ "$(is_running framework)" = "y" ]; then
+          docker exec -it "$(comp_name framework)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+          docker compose restart framework;
+        fi
+        if [ "$(is_running fileworker)" = "y" ]; then
+          docker exec -it "$(comp_name fileworker)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+          docker compose restart fileworker;
+        fi
+        if [ "$(is_running web)" = "y" ]; then
+          docker exec -it "$(comp_name web)" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}" &&
+          docker compose restart web;
+        fi
         echo "################################################################" &&
         echo "Prerelease Refresh Completed - So things may be broken..." &&
         echo "This is NOT persistent and you will need to update environment" &&
@@ -178,7 +198,7 @@ then
 			git pull &&
 			docker build --no-cache -t kihara/across-base:latest ./base &&
 			docker tag kihara/across-base:latest kihara/across-base:v20 &&
-			docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+			full_stop &&
 			docker compose build --no-cache &&
 			docker system prune -f &&
 			echo "################################################################" &&
@@ -196,12 +216,12 @@ then
       echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF BACKUP FILES";;
 		restore)
 		  cp "$(ls -Art ./common/data/backup/database-* | tail -n 1)" ./common/data/backup/restore.sqldump.bz2;
-		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+		  full_stop &&
 		  docker compose up database -d &&
 		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /restore.sh &&
 		  echo "You can now start Sequenzia normally!";;
 		export)
-		  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+		  full_stop &&
       docker compose up database -d &&
       docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh kickstart.sql &&
       tar --exclude=./common/config/compliance* \
@@ -217,7 +237,7 @@ then
       ./common/persistent/ \
       ./common/ssl/ &&
       rm ./common/data/backup/kickstart.sql &&
-      docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+      full_stop &&
       echo "Export Completed, Please take the kickstart file to your new server or store this for later!"
       echo ""
       echo "DANGER!!! KICKSTART FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
@@ -226,7 +246,7 @@ then
 		import)
       if [ "$(ls -Art ./sequenzia-kickstart* | wc -l)" -gt 0 ]; then
   		  tar xvf "$(ls -Art ./sequenzia-kickstart* | tail -n 1)" &&
-	  	  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down &&
+	  	  full_stop &&
 		    docker compose build --no-cache &&
 		    docker compose up database -d &&
   		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /restore.sh kickstart.sql
@@ -239,6 +259,7 @@ then
 		  docker compose up database -d &&
 		  docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh && cp common/data/backup/database-* common/data/upload/Backup
 		  echo "The backup file should now be uploading to Sequenzia's Backup folder."
+		  echo ""
 		  echo "If you removed that folder then your in big fucking trouble, because it will upload to the data channel..."
 		  echo "DANGER!!! BACKUP FILES CONTAIN UNENCRYPTED USER DATA AND ARE CONSIDERED PROTECTED CONFIDENTIAL DATA"
       echo "YOU ARE RESPONSIBLE FOR THE SECURITY OF THESE FILES, ACADEMY CITY RESEARCH AND DIGITAL ARTIFACTS LLC"
@@ -247,18 +268,23 @@ then
 	esac
 else
 	echo ""
-	echo "start      - Start service(s)"
-	echo "restart    - Restart service(s)"
-	echo "reset      - Reset (down/up) service(s)"
-	echo "stop       - Shutdown service(s)"
-	echo "status     - Status of operations"
-	echo "logs       - View live service logs"
+	echo "start      - Boot server"
+	echo "stop       - Shutdown server"
+	echo "restart    - Restart server"
+	echo "reset      - Reset server OS"
+	echo '             [?] Above commands support specifying a component or "list"'
+	echo 'mode       - Show or Set Operator Mode'
+	echo ''
+	echo "status     - Status of components"
+	echo "logs       - Show components logs"
+	echo ""
+	echo "test       - Boot server in foreground"
+	echo "test-core  - Boot Core Components in foreground"
 	echo ""
 	echo "config     - Edit User Configuration File"
 	echo "env        - Edit User Environment File"
 	echo "setupaw    - Edit AuthWare Configuration File"
 	echo ""
-	echo "update     - Update to latest version"
 	echo "refresh    - Update to latest commit (Non-Persistent)"
 	echo "prerelease - Update to latest prerelease commit (Non-Persistent)"
 	echo "build      - Rebuild Element(s) and Reload Static Files"
