@@ -49,6 +49,7 @@ then
 		  if [ -n "$2" ]
       then
 		    echo "$2" > ./common/config/controller.dat
+		    echo "Saved Operator Mode to: $2"
 		  else
 		    echo "Current Operator Mode is: $(cat ./common/config/controller.dat 2> /dev/null || echo 'default proxy')"
       fi
