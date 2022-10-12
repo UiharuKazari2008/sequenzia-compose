@@ -153,7 +153,7 @@ then
 		  echo "Updating to latest prerelease commit..."
 		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then
 		    UPDATE_COMMAND='git fetch; [ "$(git show-ref refs/heads/prerelease | wc -l)" -gt 0 ] && { git reset --hard "origin/prerelease" && npm install } || { echo "No Update Available" && exit 1 }'
-        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
+        docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -x -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
         docker compose restart watchdog &&
         sleep 5;
         docker exec -it "$(docker compose ps watchdog | tail -n +2 | awk '{ print $1 }')" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql' &&
