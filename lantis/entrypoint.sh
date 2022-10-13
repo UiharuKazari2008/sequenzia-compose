@@ -42,8 +42,12 @@ fi
 
 /usr/sbin/sshd -D -E /lantis/lantis.log &
 
-/wait || exit 10
-touch lantis.log && bash ./lantis.bash -L || exit 3;
+if [ -z "${LANTIS_ENABLED}" ] || [ "${LANTIS_ENABLED}" = "true" ]; then
+	/wait || exit 10
+	touch lantis.log && bash ./lantis.bash -L || exit 3;
+else
+	echo "LANTIS is operating in server only mode"
+fi
 tail -f /lantis/lantis.log;
 
 

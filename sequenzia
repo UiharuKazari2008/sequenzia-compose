@@ -51,11 +51,18 @@ then
 		mode)
 		  if [ -n "$2" ]
       then
-		    echo "$2" > ./common/config/controller.dat
-		    echo "Saved Operator Mode to: $2"
-		  else
-		    echo "Current Operator Mode is: $(cat ./common/config/controller.dat 2> /dev/null || echo 'default proxy')"
+        case "$2" in
+          append)
+            if [ -n "$3" ]
+            then
+              echo "$(cat ./common/config/controller.dat 2> /dev/null || echo 'default proxy') $3" > ./common/config/controller.dat
+            else
+              echo "You need to specify a mode to append"
+            fi;;
+          *) echo "$2" > ./common/config/controller.dat;;
+        esac
       fi
+      echo "Operator Mode to: $(cat ./common/config/controller.dat 2> /dev/null || echo 'default proxy')"
 		  ;;
 		test-core) docker compose up database mq framework authware;;
 		test)
@@ -156,38 +163,38 @@ then
 		  if [ -n "$2" ]
       then
         case "$2" in
-              start)
-                if [ "$(is_running watchdog)" = "y" ]; then
-                  docker exec -it "$(comp_name lantis-router)" sh -c "cd /lantis; bash ./lantis.bash -L"
-                else
-                  echo "LANTIS Router is not running"
-                fi;;
-              stop)
-                if [ "$(is_running watchdog)" = "y" ]; then
-                  docker exec -it "$(comp_name lantis-router)" sh -c "cd /lantis; bash ./lantis.bash -K"
-                else
-                  echo "LANTIS Router is not running"
-                fi;;
-              keygen-setup)
-                ssh-keygen -f ./common/keys/setup.key -N '' -b 2048 &&
-                echo "Your Setup Public Key is:" &&
-                cat ./common/keys/setup.key.pub &&
-                echo '';;
-              keygen-master)
-                ssh-keygen -f ./common/keys/lantis.key -N '' -b 2048 &&
-                echo "Your LANTIS Public Key is:" &&
-                cat ./common/keys/setup.key.pub &&
-                echo '';;
-              pubkeys)
-                echo "Your Setup Public Key is:" &&
-                cat ./common/keys/setup.key.pub &&
-                echo ' ' &&
-                echo "Your LANTIS Public Key is:" &&
-                cat ./common/keys/setup.key.pub &&
-                echo '';;
-              config) nano ./common/config/connections/*.rc;;
-              *) echo "Invalid command";;
-            esac
+          start)
+            if [ "$(is_running watchdog)" = "y" ]; then
+              docker exec -it "$(comp_name lantis-router)" sh -c "cd /lantis; bash ./lantis.bash -L"
+            else
+              echo "LANTIS Router is not running"
+            fi;;
+          stop)
+            if [ "$(is_running watchdog)" = "y" ]; then
+              docker exec -it "$(comp_name lantis-router)" sh -c "cd /lantis; bash ./lantis.bash -K"
+            else
+              echo "LANTIS Router is not running"
+            fi;;
+          keygen-setup)
+            ssh-keygen -f ./common/keys/setup.key -N '' -b 2048 &&
+            echo "Your Setup Public Key is:" &&
+            cat ./common/keys/setup.key.pub &&
+            echo '';;
+          keygen-master)
+            ssh-keygen -f ./common/keys/lantis.key -N '' -b 2048 &&
+            echo "Your LANTIS Public Key is:" &&
+            cat ./common/keys/setup.key.pub &&
+            echo '';;
+          pubkeys)
+            echo "Your Setup Public Key is:" &&
+            cat ./common/keys/setup.key.pub &&
+            echo ' ' &&
+            echo "Your LANTIS Public Key is:" &&
+            cat ./common/keys/setup.key.pub &&
+            echo '';;
+          config) nano ./common/config/connections/*.rc;;
+          *) echo "Invalid command";;
+        esac
       else
         echo "Missing command"
       fi
@@ -343,6 +350,7 @@ else
 	echo "reset      - Reset server OS"
 	echo '             [?] Above commands support specifying a component or "list"'
 	echo 'mode       - Show or Set Operator Mode'
+	echo '- append         - Append mode to operator mode'
 	echo ''
 	echo 'router     - Interface with embedded LANTIS router (must be enabled)'
 	echo '- start          - Start all routes'

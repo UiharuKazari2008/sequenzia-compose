@@ -8,7 +8,7 @@ services:
     networks:
       kanmi_system:
         aliases:
-          - router.acr
+          - router.backend.acr
     environment:
       WAIT_HOSTS: 'sequenzia.acr:3000, 127.0.0.1:65200'
     volumes:
