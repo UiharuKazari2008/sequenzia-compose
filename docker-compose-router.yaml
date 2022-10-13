@@ -1,0 +1,21 @@
+services:
+  lantis-router:
+    build:
+      context: ./lantis
+    env_file: ./common/config/user-config.env
+    ports:
+      - 65200:65200
+    networks:
+      kanmi_system:
+        aliases:
+          - router.acr
+    environment:
+      WAIT_HOSTS: 'sequenzia.acr:3000, 127.0.0.1:65200'
+    volumes:
+      - ./common/config/connections/:/lantis/connections/:ro
+      - ./common/keys/:/keys/
+    restart: on-failure
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"

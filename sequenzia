@@ -18,6 +18,8 @@ getServices() {
         DFL="${DFL} -f docker-compose-external.yaml";;
       manager)
         DFL="${DFL} -f docker-compose-manager.yaml";;
+      router)
+        DFL="${DFL} -f docker-compose-router.yaml";;
       proxy)
         DFL="${DFL} -f docker-compose-frontend.yaml";;
       samba)
@@ -27,16 +29,17 @@ getServices() {
     esac
   done
 }
+ALL_DFL='-f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-router.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml'
 full_stop() {
-  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml down;
+  docker compose ${ALL_DFL} down;
 }
 comp_name() {
-  docker compose ps $1 | tail -n +2 | awk '{ print $1 }'
+  docker compose ${DFL} ps $1 | tail -n +2 | awk '{ print $1 }'
 }
 is_running() {
   case "$(comp_name $1)" in
-    no*) echo "y";;
-    *) echo "n";;
+    no*) echo "n";;
+    *) echo "y";;
   esac
 }
 
@@ -72,7 +75,8 @@ then
 		stop)
 		  if [ -n "$2" ]
       then
-        docker compose ${DFL} stop $2
+        docker compose ${DFL} stop $2 &&
+        docker compose ${DFL} rm -f $2
       else
         full_stop
       fi;;
@@ -96,24 +100,42 @@ then
 		config) nano common/config/user-config.json ;;
 		env) nano common/config/user-config.env ;;
 		setupaw) nano common/config/setup-authware.env ;;
-		status) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml ps;;
-		logs) docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml logs -f;;
-		certgen)
-		  if [ "$(is_running web)" = "y" ] && [ "$(is_running frontend)" = "y" ]; then
-        docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
-        docker exec -it "$(docker compose ps frontend | tail -n +2 | awk '{ print $1 }')" openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=localhost" -addext "subjectAltName=DNS:localhost" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
-        docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml stop frontend &&
-        docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
-        echo "IMPORTANT! MAC OS handles self signed certificates poorly and you will have to get a real certificate from certbot once your ready to complete"
-			else
-			  echo "Web Server and Frontend are not running!"
-      fi;;
+		status) docker compose ${ALL_DFL} ps;;
+		logs) docker compose ${ALL_DFL} logs $2 -f;;
+    certs)
+      if [ -n "$2" ]
+      then
+        case "$2" in
+              request)
+                if [ "$(is_running frontend)" = "y" ]; then
+                  docker exec -it "$(comp_name frontend)" sh -c 'mkdir -p /certs/certbot && certbot certonly --config-dir /certs/certbot --webroot-path="/www-root/" --webroot -d $EXTERNAL_FQDN --email $CERT_EMAIL --non-interactive --expand --agree-tos'
+                  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
+                  echo "The server should be available soon, Please visit your domain name to confirm your certificates are correctly loaded!"
+                else
+                  echo "Frontend Proxy is not running or is not configured!"
+                fi;;
+              selfsigned)
+                if [ "$(is_running frontend)" = "y" ]; then
+                  docker exec -it "$(comp_name frontend)" openssl req -new -x509 -nodes -days 365 -sha256 -subj "/C=JP/ST=Tokyo/L=Academy City/O=Academy City Research - Non-Affiliated Subsidiary/CN=localhost" -addext "subjectAltName=DNS:localhost" -newkey rsa:2048 -keyout /certs/frontend.key -out /certs/frontend.crt &&
+                  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml stop frontend &&
+                  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
+                  echo "IMPORTANT! MAC OS handles self signed certificates poorly and you will have to get a real certificate from certbot once your ready to complete"
+                else
+                  echo "Frontend Proxy is not running or is not configured!"
+                fi;;
+              reset) rm -rf ./common/keys/certbot ;;
+              *) echo "Invalid command";;
+            esac
+      else
+        echo "Missing command"
+      fi
+      ;;
 		build)
 			if [ -n "$2" ]
 			then
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml stop $2 &&
-				docker compose build --no-cache $2 &&
-				docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml up $2 -d &&
+				docker compose ${ALL_DFL} stop $2 &&
+				docker compose ${DFL} build --no-cache $2 &&
+				docker compose ${ALL_DFL} up $2 -d &&
 				docker system prune -f &&
 				echo "################################################################" &&
 				echo "Build of $2 Completed Successfully and Restarted" &&
@@ -122,7 +144,7 @@ then
 				git pull &&
 				full_stop &&
 				docker system prune -f &&
-				docker compose build --no-cache &&
+				docker compose ${DFL} build --no-cache &&
 				echo "################################################################" &&
 				echo "Build Completed Successfully" &&
 				echo "################################################################" &&
@@ -130,6 +152,46 @@ then
 				docker compose ${DFL} up ${DCL} -d
 			fi
 			;;
+		router)
+		  if [ -n "$2" ]
+      then
+        case "$2" in
+              start)
+                if [ "$(is_running watchdog)" = "y" ]; then
+                  docker exec -it "$(comp_name lantis-router)" sh -c "cd /lantis; bash ./lantis.bash -L"
+                else
+                  echo "LANTIS Router is not running"
+                fi;;
+              stop)
+                if [ "$(is_running watchdog)" = "y" ]; then
+                  docker exec -it "$(comp_name lantis-router)" sh -c "cd /lantis; bash ./lantis.bash -K"
+                else
+                  echo "LANTIS Router is not running"
+                fi;;
+              keygen-setup)
+                ssh-keygen -f ./common/keys/setup.key -N '' -b 2048 &&
+                echo "Your Setup Public Key is:" &&
+                cat ./common/keys/setup.key.pub &&
+                echo '';;
+              keygen-master)
+                ssh-keygen -f ./common/keys/lantis.key -N '' -b 2048 &&
+                echo "Your LANTIS Public Key is:" &&
+                cat ./common/keys/setup.key.pub &&
+                echo '';;
+              pubkeys)
+                echo "Your Setup Public Key is:" &&
+                cat ./common/keys/setup.key.pub &&
+                echo ' ' &&
+                echo "Your LANTIS Public Key is:" &&
+                cat ./common/keys/setup.key.pub &&
+                echo '';;
+              config) nano ./common/config/connections/*.rc;;
+              *) echo "Invalid command";;
+            esac
+      else
+        echo "Missing command"
+      fi
+      ;;
 		refresh)
 		  echo "Updating to latest commit..."
 		  UPDATE_COMMAND='git fetch && git reset --hard origin && npm install'
@@ -154,6 +216,10 @@ then
       if [ "$(is_running web)" = "y" ]; then
         docker exec -it "$(comp_name web)" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}"  &&
         docker compose restart web
+      fi
+      if [ "$(is_running lantis-router)" = "y" ]; then
+        docker exec -it "$(comp_name lantis-router)" sh -c "cd /lantis && git fetch && git reset"  &&
+        docker compose restart lantis-router
       fi
       echo "################################################################" &&
       echo "Refresh Completed - This is NOT persistent and you will need to" &&
@@ -234,9 +300,10 @@ then
       -cvjf "./sequenzia-kickstart-$(date +%Y-%m-%d_%H-%M).tar.bz2" \
       ./common/data/ \
       ./common/config/ \
-      ./common/well-known/ \
+      ./common/www-root/ \
       ./common/persistent/ \
       ./common/ssl/ \
+      ./common/keys/ \
       ./sequenzia-web/public &&
       rm ./common/data/backup/kickstart.sql &&
       full_stop &&
@@ -277,6 +344,14 @@ else
 	echo '             [?] Above commands support specifying a component or "list"'
 	echo 'mode       - Show or Set Operator Mode'
 	echo ''
+	echo 'router     - Interface with embedded LANTIS router (must be enabled)'
+	echo '- start          - Start all routes'
+	echo '- stop           - Kill all routes'
+	echo '- keygen-setup   - Generate a new keypair for setup'
+	echo '- keygen-master  - Generate a new keypair for transport'
+	echo '- pubkeys        - Display public keys'
+	echo '- config         - Edit the Connections'
+	echo ''
 	echo "status     - Status of components"
 	echo "logs       - Show components logs"
 	echo ""
@@ -287,12 +362,19 @@ else
 	echo "env        - Edit User Environment File"
 	echo "setupaw    - Edit AuthWare Configuration File"
 	echo ""
+	echo 'certs      - Manage SSL Certificates'
+	echo '- request        - Request new certificate from Certbot'
+  echo '- selfsigned     - Generate self signed certificate'
+  echo '- reset          - Remove Certbot Certificates and Settings'
+  echo ''
+	echo '[!] You MUST have configured a valid "EXTERNAL_FQDN", "CERT_EMAIL", and'
+	echo '    have configured LANTIS or Port Forwarding for remote access'
+	echo ""
 	echo "refresh    - Update to latest commit (Non-Persistent)"
 	echo "prerelease - Update to latest prerelease commit (Non-Persistent)"
 	echo "build      - Rebuild Element(s) and Reload Static Files"
 	echo "fbuild     - Rebuild ACROSS, Update base files, and Build Elements"
 	echo "publish    - Publish ACROSS Images (Contributors Only)"
-	echo "certgen    - Generate New Default SSL Certificates"
 	echo ""
 	echo "upload     - Backup Database to Discord #backup Channel"
 	echo "backup     - Backup Database to /common/data/backup"
