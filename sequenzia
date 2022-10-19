@@ -116,6 +116,7 @@ then
               request)
                 if [ "$(is_running frontend)" = "y" ]; then
                   docker exec -it "$(comp_name frontend)" sh -c 'mkdir -p /certs/certbot && certbot certonly --config-dir /certs/certbot --webroot-path="/www-root/" --webroot -d $EXTERNAL_FQDN --email $CERT_EMAIL --non-interactive --expand --agree-tos'
+                  docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml down frontend &&
                   docker compose -f docker-compose.yaml -f docker-compose-frontend.yaml up frontend -d &&
                   echo "The server should be available soon, Please visit your domain name to confirm your certificates are correctly loaded!"
                 else
@@ -237,27 +238,41 @@ then
 		  echo "Updating to latest prerelease commit..."
 		  if [ "$(git rev-parse --abbrev-ref HEAD)" = "prerelease" ]; then
 		    UPDATE_COMMAND='git fetch; [ "$(git show-ref prerelease | wc -l)" -eq 0 ] && echo "No Update Available" && exit 1 || git reset --hard "origin/prerelease" && npm install'
-		    if [ "$(is_running watchdog)" = "y" ]; then
-          docker exec -it "$(comp_name watchdog)" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
-          docker compose restart watchdog &&
-          sleep 5;
-          docker exec -it "$(comp_name watchdog)" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql'
-        fi
-        if [ "$(is_running authware)" = "y" ]; then
-          docker exec -it "$(comp_name authware)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
-          docker compose restart authware;
-        fi
-        if [ "$(is_running framework)" = "y" ]; then
-          docker exec -it "$(comp_name framework)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
-          docker compose restart framework;
-        fi
-        if [ "$(is_running fileworker)" = "y" ]; then
-          docker exec -it "$(comp_name fileworker)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
-          docker compose restart fileworker;
-        fi
-        if [ "$(is_running web)" = "y" ]; then
-          docker exec -it "$(comp_name web)" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}" &&
-          docker compose restart web;
+		    if [ -n "$2" ]
+        then
+          if [ "$(is_running $2)" = "y" ]; then
+            if [ "$2" == "web" ]; then
+              docker exec -it "$(comp_name $2)" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}"
+            elif [ "$2" == "watchdog" ]; then
+              docker exec -it "$(comp_name $2)" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}"
+            else
+              docker exec -it "$(comp_name $2)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"
+            fi
+            docker compose restart $2;
+          fi
+        else
+          if [ "$(is_running watchdog)" = "y" ]; then
+            docker exec -it "$(comp_name watchdog)" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}" &&
+            docker compose restart watchdog &&
+            sleep 5;
+            docker exec -it "$(comp_name watchdog)" sh -c '/wait && mysql -h "$DATABASE_HOST" -u "$DATABASE_USERNAME" -p"$DATABASE_PASSWORD" kanmi_system < /across/compliance_v20.sql'
+          fi
+          if [ "$(is_running authware)" = "y" ]; then
+            docker exec -it "$(comp_name authware)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+            docker compose restart authware;
+          fi
+          if [ "$(is_running framework)" = "y" ]; then
+            docker exec -it "$(comp_name framework)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+            docker compose restart framework;
+          fi
+          if [ "$(is_running fileworker)" = "y" ]; then
+            docker exec -it "$(comp_name fileworker)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}" &&
+            docker compose restart fileworker;
+          fi
+          if [ "$(is_running web)" = "y" ]; then
+            docker exec -it "$(comp_name web)" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}" &&
+            docker compose restart web;
+          fi
         fi
         echo "################################################################" &&
         echo "Prerelease Refresh Completed - So things may be broken..." &&

@@ -12,7 +12,7 @@ cp /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.template
 
 export SSL_CERT="/certs/frontend.crt"
 export SSL_KEY="/certs/frontend.key"
-if [ -n "${EXTERNAL_FQDN}" ] && [ -d "/certs/certbot/live/${EXTERNAL_FQDN}/" ]; then
+if [ -d "/certs/certbot/live/${EXTERNAL_FQDN}/" ]; then
 	export SSL_CERT="/certs/certbot/live/${EXTERNAL_FQDN}/fullchain.pem"
 	export SSL_KEY="/certs/certbot/live/${EXTERNAL_FQDN}/privkey.pem"
 fi
