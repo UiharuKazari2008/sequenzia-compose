@@ -3,3 +3,7 @@ common/admin-home
 common/data/upload/*
 common/data/download/*
 common/config/user-config.json
+common/config/lantis.*
+common/ssl
+common/keys
+sequenzia-kickstart-*

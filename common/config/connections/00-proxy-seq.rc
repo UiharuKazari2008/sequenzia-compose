@@ -1,0 +1,26 @@
+#!/bin/bash
+# shellcheck disable=SC2034
+
+CONNECTION_NAME="Sequenzia"
+ENABLED="false"
+
+REMOTE_HOST="REMOTE_HOST_NAME"
+#REMOTE_HOST=""
+REMOTE_PORT="22"
+REMOTE_USER="root"
+REMOTE_SETUP="true"
+LOCAL_OPEN="true"
+
+LOCAL_USER="root"
+LOCAL_PORT="65200"
+REMOTE_LPORT="65301"
+
+FORWARD_PORTS="3000:sequenzia.acr:3000"
+#FORWARD_PORTS="80:frontend.acr:80 443:frontend.acr:443"
+FORWARD_PUBLIC="true"
+
+# Comment out if you do not use UFW
+CONNECT_REMOTE_COMMANDS="ufw allow 3000/tcp"
+DISCONNECT_REMOTE_COMMANDS="ufw delete allow 3000/tcp"
+# Maybe add a WebSocket back to discord for dropouts
+DROPPED_REMOTE_COMMANDS=""

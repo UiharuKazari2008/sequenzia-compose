@@ -85,42 +85,43 @@ Sequenzia is not a single project or system but multiple separate projects.
 * Web interface or its APIs should be reported [in the sequenzia project](https://github.com/UiharuKazari2008/sequenzia/issues)
 * Media Library Indexer should be reported [in the IntelliDex Project](https://github.com/UiharuKazari2008/sequenzia-intellidex/issues)
 
-## Quick Commands
-### Start Server:
+## Sequenzia CLI
 ```shell
-./sequenzia start
-```
+~/IdeaProjects/sequenzia-compose (prerelease ✘)✹✭ ᐅ ./sequenzia         
+Sequenzia Server Control (Alpha)
 
-### Stop Server
-```shell
-./sequenzia stop
-```
+start      - Boot server
+stop       - Shutdown server
+restart    - Restart server
+reset      - Reset server OS
+             [?] Above commands support specifying a component or "list"
+mode       - Show or Set Operator Mode
 
-### Update Server
-*Use reinit instead to completely restart the modules*
-```shell
-./sequenzia restart
-```
+status     - Status of components
+logs       - Show components logs
 
-### Start with Web Desktop for SQL Administration
-```shell
-./sequenzia start manager
-```
+test       - Boot server in foreground
+test-core  - Boot Core Components in foreground
 
-### Start with Windows Share
-```shell
-./sequenzia start samba
-```
-This will provide a Windows Share that you can access or mount as a Network Drive<br/>
-`\\<IPADDRESS>\upload`
+config     - Edit User Configuration File
+env        - Edit User Environment File
+setupaw    - Edit AuthWare Configuration File
 
-### Start with Remote Core Access
-**You should only use this if you are connecting another host to the Database and MQ backend.**<br/>
-```shell
-./sequenzia start external
-```
+refresh    - Update to latest commit (Non-Persistent)
+prerelease - Update to latest prerelease commit (Non-Persistent)
+build      - Rebuild Element(s) and Reload Static Files
+fbuild     - Rebuild ACROSS, Update base files, and Build Elements
+publish    - Publish ACROSS Images (Contributors Only)
+certgen    - Generate New Default SSL Certificates
 
-### Update Base Image (When you modify files in /base or Unsupposted CPU Architecture)
+upload     - Backup Database to Discord #backup Channel
+backup     - Backup Database to /common/data/backup
+restore    - Restore last Database from /common/data/backup
+
+export     - Export Kickstart Tarball
+import     - Import Kickstart Tarball
+```
+## Update Base Image (When you modify files in /base or Unsupposted CPU Architecture)
 *Add `-f` for the extra modules you are trying to restart*
 ```shell
 ./sequenzia fbuild
