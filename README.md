@@ -8,6 +8,10 @@ This is a simple "turn-key" solution for the Kanmi x Sequenzia system. This is m
 
 This is currently based and locked on Sequenzia v20, For the bleading edge use the "development" branch and for testing updates that are soon to be released use the "prerelease" branch.
 
+# Deployments of Sequenzia MUST be for Personal Use ONLY and CAN NOT be used for commercial usage or applications
+Due to licensing restrictions of fonts, images, and or other assets, Sequenzia deployments MUST be for personal use ONLY.
+This includes and is not limited to cryptocurrencies and or NFTs, I (Yukimi Kazari), Digital Artifacts, and Academy City Research will not provide any support for instances of Seqeunzia that do not follow these requirements. By breaking the personal usage requirements you leave your self responsible to any damages to effected parties that require personal usage only for these assets.
+
 # Help Wanted
 Do you know NodeJS, HTML, JavaScript, Pug, CSS, SQL, etc? Please contact me on Discord `Yukimi Kazari#9854` to see how you can help the project (possible paid positions avalible)
 
