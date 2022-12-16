@@ -210,3 +210,85 @@ set @query = IF(@exist <= 0, 'alter table kongou_shows add search text null;',
 
 prepare kongou_mss_add from @query;
 EXECUTE kongou_mss_add;
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'decision'
+  AND table_name = 'twitter_tweets';
+
+set @query = IF(@exist <= 0, 'alter table twitter_tweets add decision tinyint(1) null;',
+                'select \'Column Exists\' status');
+
+prepare twitter_tweets_decision_add from @query;
+EXECUTE twitter_tweets_decision_add;
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'rating'
+  AND table_name = 'sequenzia_index_artists';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_index_artists add rating float(6, 5) null;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_index_artists_rating_add from @query;
+EXECUTE sequenzia_index_artists_rating_add;
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'color'
+  AND table_name = 'discord_permissons';
+
+set @query = IF(@exist <= 0, 'alter table discord_permissons add color varchar(10) null after server;',
+                'select \'Column Exists\' status');
+
+prepare discord_permissons_color_add from @query;
+EXECUTE discord_permissons_color_add;
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'text'
+  AND table_name = 'discord_permissons';
+
+set @query = IF(@exist <= 0, 'alter table discord_permissons add text varchar(1024) null after color;',
+                'select \'Column Exists\' status');
+
+prepare discord_permissons_text_add from @query;
+EXECUTE discord_permissons_text_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'color'
+  AND table_name = 'discord_users_permissons';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_permissons add color varchar(10) null after serverid;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_permissons_color_add from @query;
+EXECUTE discord_users_permissons_color_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'text'
+  AND table_name = 'discord_users_permissons';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_permissons add text varchar(1024) null after color;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_permissons_text_add from @query;
+EXECUTE discord_users_permissons_text_add;

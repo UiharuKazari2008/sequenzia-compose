@@ -24,12 +24,20 @@ getServices() {
         DFL="${DFL} -f docker-compose-frontend.yaml";;
       samba)
         DFL="${DFL} -f docker-compose-share.yaml";;
+      cms-twitter)
+        DFL="${DFL} -f docker-compose-cms-twitter.yaml";;
+      cms-pixiv)
+        DFL="${DFL} -f docker-compose-cms-pixiv.yaml";;
+      cms-rss)
+        DFL="${DFL} -f docker-compose-cms-rss.yaml";;
+      cms-spider)
+        DFL="${DFL} -f docker-compose-cms-spider.yaml";;
       *)
         DCL="${DCL} ${i}";;
     esac
   done
 }
-ALL_DFL='-f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-router.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml'
+ALL_DFL='-f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-router.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml -f docker-compose-cms-twitter.yaml -f docker-compose-cms-pixiv.yaml -f docker-compose-cms-rss.yaml -f docker-compose-cms-spider.yaml'
 full_stop() {
   docker compose ${ALL_DFL} down;
 }
