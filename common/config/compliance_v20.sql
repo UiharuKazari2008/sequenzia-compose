@@ -292,3 +292,14 @@ set @query = IF(@exist <= 0, 'alter table discord_users_permissons add text varc
 
 prepare discord_users_permissons_text_add from @query;
 EXECUTE discord_users_permissons_text_add;
+
+CREATE TABLE IF NOT EXISTS `discord_permissons_reactions` (
+    `index` int NOT NULL AUTO_INCREMENT,
+    `server` varchar(255) NOT NULL,
+    `message` varchar(255) NOT NULL,
+    `emoji` varchar(255) NOT NULL,
+    `role` varchar(255) DEFAULT NULL,
+    `name` text,
+    `approval` tinyint(1) DEFAULT '0',
+    PRIMARY KEY (`index`)
+)
