@@ -302,4 +302,12 @@ CREATE TABLE IF NOT EXISTS `discord_permissons_reactions` (
     `name` text,
     `approval` tinyint(1) DEFAULT '0',
     PRIMARY KEY (`index`)
-)
+);
+
+create table if not exists sequenzia_user_cache
+(
+    userid varchar(255) not null,
+    data   json         not null,
+    constraint sequenzia_user_cache_pk
+        primary key (userid)
+);
