@@ -311,3 +311,108 @@ create table if not exists sequenzia_user_cache
     constraint sequenzia_user_cache_pk
         primary key (userid)
 );
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'avatar_custom'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add avatar_custom varchar(512) null after id;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_avatar_custom from @query;
+EXECUTE discord_users_extended_avatar_custom;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'nice_name'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add nice_name text null after id;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_nice_name from @query;
+EXECUTE discord_users_extended_nice_name;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'banner_custom'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add banner_custom varchar(512) null after avatar_custom',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_banner_custom from @query;
+EXECUTE discord_users_extended_banner_custom;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'token'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add token varchar(1024) null after banner_custom;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_token from @query;
+EXECUTE discord_users_extended_token;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'blind_token'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add blind_token varchar(512) default null null after token;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_blind_token from @query;
+EXECUTE discord_users_extended_blind_token;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'token_static'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add token_static varchar(1024) default null null after blind_token;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_token_static from @query;
+EXECUTE discord_users_extended_token_static;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'token_expires'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add token_expires datetime default CURRENT_TIMESTAMP null after token_static;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_token_expires from @query;
+EXECUTE discord_users_extended_token_expires;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'user_data'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add user_data json null;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_extended_user_data from @query;
+EXECUTE discord_users_extended_user_data;
