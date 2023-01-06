@@ -416,3 +416,19 @@ set @query = IF(@exist <= 0, 'alter table discord_users_extended add user_data j
 
 prepare discord_users_extended_user_data from @query;
 EXECUTE discord_users_extended_user_data;
+
+CREATE TABLE IF NOT EXISTS `sequenzia_index_matches` (
+   `tag_pair` varchar(512) NOT NULL,
+   `eid` int NOT NULL,
+   `tag` int NOT NULL,
+   `rating` double(4,3) DEFAULT NULL,
+   PRIMARY KEY (`tag_pair`),
+   UNIQUE KEY `sequenzia_index_matches_tag_pair_uindex` (`tag_pair`)
+);
+
+CREATE TABLE IF NOT EXISTS `sequenzia_index_tags` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `name` text NOT NULL,
+    `type` int NOT NULL,
+    PRIMARY KEY (`id`)
+);
