@@ -432,3 +432,16 @@ CREATE TABLE IF NOT EXISTS `sequenzia_index_tags` (
     `type` int NOT NULL,
     PRIMARY KEY (`id`)
 );
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'tags'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add tags text null;',
+                'select \'Column Exists\' status');
+
+prepare records_cache_tags from @query;
+EXECUTE records_cache_tags;
