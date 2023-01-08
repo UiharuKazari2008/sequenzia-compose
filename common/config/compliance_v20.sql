@@ -440,7 +440,7 @@ WHERE table_schema = database()
   and COLUMN_NAME = 'tags'
   AND table_name = 'kanmi_records';
 
-set @query = IF(@exist <= 0, 'alter table kanmi_records add tags text null;',
+set @query = IF(@exist <= 0, 'alter table kanmi_records add tags longtext null;',
                 'select \'Column Exists\' status');
 
 prepare records_cache_tags from @query;
