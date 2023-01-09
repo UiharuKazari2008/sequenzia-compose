@@ -445,3 +445,42 @@ set @query = IF(@exist <= 0, 'alter table kanmi_records add tags longtext null;'
 
 prepare records_cache_tags from @query;
 EXECUTE records_cache_tags;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'tags_custom'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_custom longtext null;',
+                'select \'Column Exists\' status');
+
+prepare records_user_tags from @query;
+EXECUTE records_user_tags;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'tags_pending'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_pending longtext null;',
+                'select \'Column Exists\' status');
+
+prepare records_cache2_tags from @query;
+EXECUTE records_cache2_tags;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'tags_ver'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_ver longtext null;',
+                'select \'Column Exists\' status');
+
+prepare records_version_tags from @query;
+EXECUTE records_version_tags;
