@@ -450,19 +450,6 @@ SELECT count(*)
 INTO @exist
 FROM information_schema.columns
 WHERE table_schema = database()
-  and COLUMN_NAME = 'tags_custom'
-  AND table_name = 'kanmi_records';
-
-set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_custom longtext null;',
-                'select \'Column Exists\' status');
-
-prepare records_user_tags from @query;
-EXECUTE records_user_tags;
-
-SELECT count(*)
-INTO @exist
-FROM information_schema.columns
-WHERE table_schema = database()
   and COLUMN_NAME = 'tags_pending'
   AND table_name = 'kanmi_records';
 
@@ -476,6 +463,19 @@ SELECT count(*)
 INTO @exist
 FROM information_schema.columns
 WHERE table_schema = database()
+  and COLUMN_NAME = 'm_rating'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add m_rating double(4,3) null;',
+                'select \'Column Exists\' status');
+
+prepare records_rating_tags from @query;
+EXECUTE records_rating_tags;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
   and COLUMN_NAME = 'tags_ver'
   AND table_name = 'kanmi_records';
 
@@ -484,3 +484,13 @@ set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_ver longtext nu
 
 prepare records_version_tags from @query;
 EXECUTE records_version_tags;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'tags_custom'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_custom longtext null;',
+                'select \'Column Exists\' status');
