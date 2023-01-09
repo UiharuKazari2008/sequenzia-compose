@@ -494,3 +494,13 @@ WHERE table_schema = database()
 
 set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_custom longtext null;',
                 'select \'Column Exists\' status');
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'times'
+  AND table_name = 'sequenzia_navigation_history';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_navigation_history add times JSON null;',
+                'select \'Column Exists\' status');
