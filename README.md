@@ -96,6 +96,15 @@ restart    - Restart server
 reset      - Reset server OS
              [?] Above commands support specifying a component or "list"
 mode       - Show or Set Operator Mode
+- append         - Append mode to operator mode
+
+router     - Interface with embedded LANTIS router (must be enabled)
+- start          - Start all routes
+- stop           - Kill all routes
+- keygen-setup   - Generate a new keypair for setup
+- keygen-master  - Generate a new keypair for transport
+- pubkeys        - Display public keys
+- config         - Edit the Connections
 
 status     - Status of components
 logs       - Show components logs
@@ -107,12 +116,19 @@ config     - Edit User Configuration File
 env        - Edit User Environment File
 setupaw    - Edit AuthWare Configuration File
 
+certs      - Manage SSL Certificates
+- request        - Request new certificate from Certbot
+- selfsigned     - Generate self signed certificate
+- reset          - Remove Certbot Certificates and Settings
+
+[!] You MUST have configured a valid "EXTERNAL_FQDN", "CERT_EMAIL", and
+    have configured LANTIS or Port Forwarding for remote access
+
 refresh    - Update to latest commit (Non-Persistent)
 prerelease - Update to latest prerelease commit (Non-Persistent)
 build      - Rebuild Element(s) and Reload Static Files
 fbuild     - Rebuild ACROSS, Update base files, and Build Elements
 publish    - Publish ACROSS Images (Contributors Only)
-certgen    - Generate New Default SSL Certificates
 
 upload     - Backup Database to Discord #backup Channel
 backup     - Backup Database to /common/data/backup
