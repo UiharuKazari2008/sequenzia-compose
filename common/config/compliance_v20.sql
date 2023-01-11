@@ -504,3 +504,59 @@ WHERE table_schema = database()
 
 set @query = IF(@exist <= 0, 'alter table sequenzia_navigation_history add times JSON null;',
                 'select \'Column Exists\' status');
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'nice_name'
+  AND table_name = 'discord_users';
+
+set @query = IF(@exist > 0, 'alter table discord_users drop column nice_name;',
+                'select \'Column Exists\' status');
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'token'
+  AND table_name = 'discord_users';
+
+set @query = IF(@exist > 0, 'alter table discord_users drop column token;',
+                'select \'Column Exists\' status');
+
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'blind_token'
+  AND table_name = 'discord_users';
+
+set @query = IF(@exist > 0, 'alter table discord_users drop column blind_token;',
+                'select \'Column Exists\' status');
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'token_static'
+  AND table_name = 'discord_users';
+
+set @query = IF(@exist > 0, 'alter table discord_users drop column token_static;',
+                'select \'Column Exists\' status');
+
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'token_expires'
+  AND table_name = 'discord_users';
+
+set @query = IF(@exist > 0, 'alter table discord_users drop column token_expires;',
+                'select \'Column Exists\' status');
