@@ -81,7 +81,7 @@ If you need with Sequenzia, you can message me on Discord `Yukimi Kazari#9854`. 
 ## Reporting Issues
 Sequenzia is not a single project or system but multiple separate projects.
 * **Issues related to the installation proccess or possibly related to docker should be reported here**
-* Filesystem, backend, and discord should be reported [in the kanmi project](https://github.com/UiharuKazari2008/kanmi/issues)
+* Filesystem, backend, and discord should be reported [in the kanmi project](https://github.com/UiharuKazari2008/shutaura/issues)
 * Web interface or its APIs should be reported [in the sequenzia project](https://github.com/UiharuKazari2008/sequenzia/issues)
 * Media Library Indexer should be reported [in the IntelliDex Project](https://github.com/UiharuKazari2008/sequenzia-intellidex/issues)
 
