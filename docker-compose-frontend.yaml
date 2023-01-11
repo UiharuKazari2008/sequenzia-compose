@@ -11,7 +11,7 @@ services:
         aliases:
           - frontend.acr
     volumes:
-      - ./common/well-known/:/well-known/:ro
+      - ./common/www-root/.well-known/:/www-root/.well-known/
       - ./common/ssl/:/certs/
     restart: on-failure
     logging:

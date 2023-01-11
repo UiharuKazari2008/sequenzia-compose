@@ -10,6 +10,15 @@ fi
 
 cp /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.template
 
-envsubst '$RESOLVERS $EXTERNAL_FQDN $CLIENT_MAX_BODY_SIZE $CLIENT_MAX_BODY_SIZE' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+export SSL_CERT="/certs/frontend.crt"
+export SSL_KEY="/certs/frontend.key"
+if [ -d "/certs/certbot/live/${EXTERNAL_FQDN}/" ]; then
+	export SSL_CERT="/certs/certbot/live/${EXTERNAL_FQDN}/fullchain.pem"
+	export SSL_KEY="/certs/certbot/live/${EXTERNAL_FQDN}/privkey.pem"
+fi
+
+envsubst '$RESOLVERS $EXTERNAL_FQDN $SSL_CERT $SSL_KEY $CLIENT_MAX_BODY_SIZE $CLIENT_MAX_BODY_SIZE' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+
+cat /etc/nginx/conf.d/default.conf
 
 exec "$@"

@@ -85,42 +85,59 @@ Sequenzia is not a single project or system but multiple separate projects.
 * Web interface or its APIs should be reported [in the sequenzia project](https://github.com/UiharuKazari2008/sequenzia/issues)
 * Media Library Indexer should be reported [in the IntelliDex Project](https://github.com/UiharuKazari2008/sequenzia-intellidex/issues)
 
-## Quick Commands
-### Start Server:
+## Sequenzia CLI
 ```shell
-./sequenzia start
-```
+~/IdeaProjects/sequenzia-compose (prerelease ✘)✹✭ ᐅ ./sequenzia         
+Sequenzia Server Control (Alpha)
 
-### Stop Server
-```shell
-./sequenzia stop
-```
+start      - Boot server
+stop       - Shutdown server
+restart    - Restart server
+reset      - Reset server OS
+             [?] Above commands support specifying a component or "list"
+mode       - Show or Set Operator Mode
+- append         - Append mode to operator mode
 
-### Update Server
-*Use reinit instead to completely restart the modules*
-```shell
-./sequenzia restart
-```
+router     - Interface with embedded LANTIS router (must be enabled)
+- start          - Start all routes
+- stop           - Kill all routes
+- keygen-setup   - Generate a new keypair for setup
+- keygen-master  - Generate a new keypair for transport
+- pubkeys        - Display public keys
+- config         - Edit the Connections
 
-### Start with Web Desktop for SQL Administration
-```shell
-./sequenzia start manager
-```
+status     - Status of components
+logs       - Show components logs
 
-### Start with Windows Share
-```shell
-./sequenzia start samba
-```
-This will provide a Windows Share that you can access or mount as a Network Drive<br/>
-`\\<IPADDRESS>\upload`
+test       - Boot server in foreground
+test-core  - Boot Core Components in foreground
 
-### Start with Remote Core Access
-**You should only use this if you are connecting another host to the Database and MQ backend.**<br/>
-```shell
-./sequenzia start external
-```
+config     - Edit User Configuration File
+env        - Edit User Environment File
+setupaw    - Edit AuthWare Configuration File
 
-### Update Base Image (When you modify files in /base or Unsupposted CPU Architecture)
+certs      - Manage SSL Certificates
+- request        - Request new certificate from Certbot
+- selfsigned     - Generate self signed certificate
+- reset          - Remove Certbot Certificates and Settings
+
+[!] You MUST have configured a valid "EXTERNAL_FQDN", "CERT_EMAIL", and
+    have configured LANTIS or Port Forwarding for remote access
+
+refresh    - Update to latest commit (Non-Persistent)
+prerelease - Update to latest prerelease commit (Non-Persistent)
+build      - Rebuild Element(s) and Reload Static Files
+fbuild     - Rebuild ACROSS, Update base files, and Build Elements
+publish    - Publish ACROSS Images (Contributors Only)
+
+upload     - Backup Database to Discord #backup Channel
+backup     - Backup Database to /common/data/backup
+restore    - Restore last Database from /common/data/backup
+
+export     - Export Kickstart Tarball
+import     - Import Kickstart Tarball
+```
+## Update Base Image (When you modify files in /base or Unsupposted CPU Architecture)
 *Add `-f` for the extra modules you are trying to restart*
 ```shell
 ./sequenzia fbuild

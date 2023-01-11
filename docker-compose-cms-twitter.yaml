@@ -1,0 +1,15 @@
+services:
+  cms-twitter:
+    build:
+      context: ./kanmi-cms-twitter
+    env_file:
+      - ./common/config/user-config.env
+      - ./common/config/setup-authware.env
+    networks:
+      kanmi_system:
+        aliases:
+          - twitter.cms.kanmi.acr
+    volumes:
+      - persistent_data:/across/sequenzia-framework/data
+      - ./common/config/user-config.json:/across/user-config.json:ro
+    restart: on-failure
