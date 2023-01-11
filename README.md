@@ -8,10 +8,6 @@ This is a simple "turn-key" solution for the Kanmi x Sequenzia system. This is m
 
 This is currently based and locked on Sequenzia v20, For the bleading edge use the "development" branch and for testing updates that are soon to be released use the "prerelease" branch.
 
-# Deployments of Sequenzia MUST be for Personal Use ONLY and CAN NOT be used for commercial usage or applications
-Due to licensing restrictions of fonts, images, and or other assets, Sequenzia deployments MUST be for personal use ONLY.
-This includes and is not limited to cryptocurrencies and or NFTs, I (Yukimi Kazari), Digital Artifacts, and Academy City Research will not provide any support for instances of Seqeunzia that do not follow these requirements. By breaking the personal usage requirements you leave your self responsible to any damages to effected parties that require personal usage only for these assets.
-
 # Help Wanted
 Do you know NodeJS, HTML, JavaScript, Pug, CSS, SQL, etc? Please contact me on Discord `Yukimi Kazari#9854` to see how you can help the project (possible paid positions avalible)
 
@@ -100,6 +96,15 @@ restart    - Restart server
 reset      - Reset server OS
              [?] Above commands support specifying a component or "list"
 mode       - Show or Set Operator Mode
+- append         - Append mode to operator mode
+
+router     - Interface with embedded LANTIS router (must be enabled)
+- start          - Start all routes
+- stop           - Kill all routes
+- keygen-setup   - Generate a new keypair for setup
+- keygen-master  - Generate a new keypair for transport
+- pubkeys        - Display public keys
+- config         - Edit the Connections
 
 status     - Status of components
 logs       - Show components logs
@@ -111,12 +116,19 @@ config     - Edit User Configuration File
 env        - Edit User Environment File
 setupaw    - Edit AuthWare Configuration File
 
+certs      - Manage SSL Certificates
+- request        - Request new certificate from Certbot
+- selfsigned     - Generate self signed certificate
+- reset          - Remove Certbot Certificates and Settings
+
+[!] You MUST have configured a valid "EXTERNAL_FQDN", "CERT_EMAIL", and
+    have configured LANTIS or Port Forwarding for remote access
+
 refresh    - Update to latest commit (Non-Persistent)
 prerelease - Update to latest prerelease commit (Non-Persistent)
 build      - Rebuild Element(s) and Reload Static Files
 fbuild     - Rebuild ACROSS, Update base files, and Build Elements
 publish    - Publish ACROSS Images (Contributors Only)
-certgen    - Generate New Default SSL Certificates
 
 upload     - Backup Database to Discord #backup Channel
 backup     - Backup Database to /common/data/backup
