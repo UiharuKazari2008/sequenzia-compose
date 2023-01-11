@@ -12,7 +12,7 @@ ENV BRANCH_INDEX main
 ENV BRANCH_WATCHDOG master
 ENV BRANCH_RANDOMIZER master
 
-ENV REPO_FRAMEWORK "https://github.com/UiharuKazari2008/kanmi"
+ENV REPO_FRAMEWORK "https://github.com/UiharuKazari2008/shutaura"
 ENV REPO_WEB "https://github.com/UiharuKazari2008/sequenzia"
 ENV REPO_INDEX "https://github.com/UiharuKazari2008/sequenzia-intellidex"
 ENV REPO_WATCHDOG "https://github.com/UiharuKazari2008/kanmi-watchdog"
