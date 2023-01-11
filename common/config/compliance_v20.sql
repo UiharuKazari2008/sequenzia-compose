@@ -495,6 +495,9 @@ WHERE table_schema = database()
 set @query = IF(@exist <= 0, 'alter table kanmi_records add tags_custom longtext null;',
                 'select \'Column Exists\' status');
 
+prepare records_rating_tags_custom from @query;
+EXECUTE records_rating_tags_custom;
+
 SELECT count(*)
 INTO @exist
 FROM information_schema.columns
@@ -505,6 +508,8 @@ WHERE table_schema = database()
 set @query = IF(@exist <= 0, 'alter table sequenzia_navigation_history add times JSON null;',
                 'select \'Column Exists\' status');
 
+prepare navi_history_times from @query;
+EXECUTE navi_history_times;
 
 SELECT count(*)
 INTO @exist
@@ -516,6 +521,8 @@ WHERE table_schema = database()
 set @query = IF(@exist > 0, 'alter table discord_users drop column nice_name;',
                 'select \'Column Exists\' status');
 
+prepare remove_user_nice_name from @query;
+EXECUTE remove_user_nice_name;
 
 SELECT count(*)
 INTO @exist
@@ -527,7 +534,8 @@ WHERE table_schema = database()
 set @query = IF(@exist > 0, 'alter table discord_users drop column token;',
                 'select \'Column Exists\' status');
 
-
+prepare remove_user_token from @query;
+EXECUTE remove_user_token;
 
 SELECT count(*)
 INTO @exist
@@ -539,6 +547,8 @@ WHERE table_schema = database()
 set @query = IF(@exist > 0, 'alter table discord_users drop column blind_token;',
                 'select \'Column Exists\' status');
 
+prepare remove_blind_token from @query;
+EXECUTE remove_blind_token;
 
 SELECT count(*)
 INTO @exist
@@ -550,6 +560,8 @@ WHERE table_schema = database()
 set @query = IF(@exist > 0, 'alter table discord_users drop column token_static;',
                 'select \'Column Exists\' status');
 
+prepare remove_token_static from @query;
+EXECUTE remove_token_static;
 
 SELECT count(*)
 INTO @exist
@@ -560,3 +572,6 @@ WHERE table_schema = database()
 
 set @query = IF(@exist > 0, 'alter table discord_users drop column token_expires;',
                 'select \'Column Exists\' status');
+
+prepare remove_token_expires from @query;
+EXECUTE remove_token_expires;
