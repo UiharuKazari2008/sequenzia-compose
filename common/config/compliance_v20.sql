@@ -575,3 +575,33 @@ set @query = IF(@exist > 0, 'alter table discord_users drop column token_expires
 
 prepare remove_token_expires from @query;
 EXECUTE remove_token_expires;
+
+create table if not exists sequenzia_login_history
+(
+    `key`      varchar(126)                         not null,
+    session    varchar(128)                         not null,
+    id         varchar(255)                         not null,
+    ip_address varchar(128)                         not null,
+    geo        text                                 null,
+    meathod    int                                  not null,
+    user_agent text                                 null,
+    reauth_count int      default 0                 not null,
+    reauth_time datetime  default CURRENT_TIMESTAMP null,
+    is_juneos  tinyint(1) default 0                 not null,
+    time       datetime   default CURRENT_TIMESTAMP not null,
+    PRIMARY KEY (`key`),
+    UNIQUE KEY `sequenzia_login_history_session_uindex` (`key`)
+);
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'locked'
+  AND table_name = 'discord_users_extended';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add locked tinyint(1) default 0 not null;',
+                'select \'Column Exists\' status');
+
+prepare records_rating_tags_custom from @query;
+EXECUTE records_rating_tags_custom;
