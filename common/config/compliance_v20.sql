@@ -605,3 +605,36 @@ set @query = IF(@exist <= 0, 'alter table discord_users_extended add locked tiny
 
 prepare records_rating_tags_custom from @query;
 EXECUTE records_rating_tags_custom;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'approval_ch'
+  AND table_name = 'discord_permissons_reactions';
+
+set @query = IF(@exist <= 0, 'alter table discord_users_extended add approval_ch varchar(255) null;',
+                'select \'Column Exists\' status');
+
+prepare discord_permissons_reactions_approval_ch from @query;
+EXECUTE discord_permissons_reactions_approval_ch;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'remote_saveid'
+  AND table_name = 'twitter_list';
+
+set @query = IF(@exist <= 0, 'alter table twitter_list add remote_saveid varchar(128) null after saveid;',
+                'select \'Column Exists\' status');
+
+prepare twitter_list_remote_saveid from @query;
+EXECUTE twitter_list_remote_saveid;
+
+create table if not exists sequenzia_cds_audit
+(
+    esm_id varchar(126)                       not null,
+    fileid varchar(256)                       not null,
+    time   DATETIME default CURRENT_TIMESTAMP not null
+);
