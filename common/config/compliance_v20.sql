@@ -613,7 +613,7 @@ WHERE table_schema = database()
   and COLUMN_NAME = 'approval_ch'
   AND table_name = 'discord_permissons_reactions';
 
-set @query = IF(@exist <= 0, 'alter table discord_users_extended add approval_ch varchar(255) null;',
+set @query = IF(@exist <= 0, 'alter table discord_permissons_reactions add approval_ch varchar(255) null;',
                 'select \'Column Exists\' status');
 
 prepare discord_permissons_reactions_approval_ch from @query;
