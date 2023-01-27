@@ -16,6 +16,9 @@ getServices() {
       external)
         echo "WARNING! Backend SQL and MQ ports are exposed!";
         DFL="${DFL} -f docker-compose-external.yaml";;
+      api)
+        echo "WARNING! Backend Service API ports are exposed!";
+        DFL="${DFL} -f docker-compose-api.yaml";;
       manager)
         DFL="${DFL} -f docker-compose-manager.yaml";;
       router)
@@ -33,11 +36,11 @@ getServices() {
       cms-spider)
         DFL="${DFL} -f docker-compose-cms-spider.yaml";;
       *)
-        DCL="${DCL} ${i}";;
+        DCL="${DCL} -f docker-compose-${i}.yaml";;
     esac
   done
 }
-ALL_DFL='-f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-router.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml -f docker-compose-cms-twitter.yaml -f docker-compose-cms-pixiv.yaml -f docker-compose-cms-rss.yaml -f docker-compose-cms-spider.yaml'
+ALL_DFL='-f docker-compose.yaml -f docker-compose-frontend.yaml -f docker-compose-router.yaml -f docker-compose-api.yaml -f docker-compose-external.yaml -f docker-compose-manager.yaml -f docker-compose-share.yaml -f docker-compose-cms-twitter.yaml -f docker-compose-cms-pixiv.yaml -f docker-compose-cms-rss.yaml -f docker-compose-cms-spider.yaml'
 full_stop() {
   docker compose ${ALL_DFL} down;
 }
@@ -321,7 +324,8 @@ then
 		  full_stop &&
       docker compose up database -d &&
       docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh kickstart.sql &&
-      tar --exclude=./common/config/compliance* \
+      tar --owner=0 --group=0 --no-same-owner --no-same-permissions \
+      --exclude=./common/config/compliance* \
       --exclude=./common/config/example.*  \
       --exclude=./common/data/upload \
       --exclude=./common/data/.temp \

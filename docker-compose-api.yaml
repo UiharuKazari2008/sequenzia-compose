@@ -1,0 +1,4 @@
+services:
+  authware:
+    ports:
+      - 31001:31001
