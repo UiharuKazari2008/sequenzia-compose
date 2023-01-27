@@ -324,7 +324,7 @@ then
 		  full_stop &&
       docker compose up database -d &&
       docker exec -it "$(docker compose ps database | tail -n +2 | awk '{ print $1 }')" sh /backup.sh kickstart.sql &&
-      tar --owner=0 --group=0 --no-same-owner --no-same-permissions \
+      tar --no-same-owner --no-same-permissions \
       --exclude=./common/config/compliance* \
       --exclude=./common/config/example.*  \
       --exclude=./common/data/upload \
@@ -348,7 +348,7 @@ then
       echo "IS NOT RESPONSIBLE FOR ANY DAMAGES CAUSED BY IMPROPER HANDLING OF KICKSTART FILES";;
 		import)
       if [ "$(ls -Art ./sequenzia-kickstart* | wc -l)" -gt 0 ]; then
-  		  tar xvf "$(ls -Art ./sequenzia-kickstart* | tail -n 1)" &&
+  		  tar --no-same-owner --no-same-permissions xvf "$(ls -Art ./sequenzia-kickstart* | tail -n 1)" &&
 	  	  full_stop &&
 		    docker compose build --no-cache &&
 		    docker compose up database -d &&
