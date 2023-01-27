@@ -252,9 +252,9 @@ then
 		    if [ -n "$2" ]
         then
           if [ "$(is_running $2)" = "y" ]; then
-            if [ "$2" == "web" ]; then
+            if [ "$2" = "web" ]; then
               docker exec -it "$(comp_name $2)" sh -c "cd /across/sequenzia-web/ && ${UPDATE_COMMAND}"
-            elif [ "$2" == "watchdog" ]; then
+            elif [ "$2" = "watchdog" ]; then
               docker exec -it "$(comp_name $2)" sh -c "cd /across/watchdog/ && ${UPDATE_COMMAND}"
             else
               docker exec -it "$(comp_name $2)" sh -c "cd /across/sequenzia-framework/ && ${UPDATE_COMMAND}"
