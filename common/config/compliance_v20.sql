@@ -638,3 +638,206 @@ create table if not exists sequenzia_cds_audit
     fileid varchar(256)                       not null,
     time   DATETIME default CURRENT_TIMESTAMP not null
 );
+
+DROP TABLE IF EXISTS `telegram_groups`;
+DROP TABLE IF EXISTS `telegram_accounts`;
+DROP TABLE IF EXISTS `timeline_messages`;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'twitter_tweet_queue';
+
+set @query = IF(@exist <= 0, 'alter table twitter_tweet_queue add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare twitter_tweet_queue_uid_add from @query;
+EXECUTE twitter_tweet_queue_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'discord_reactions';
+
+set @query = IF(@exist <= 0, 'alter table discord_reactions add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare discord_reactions_uid_add from @query;
+EXECUTE discord_reactions_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'discord_users_permissons';
+
+set @query1 = IF(@exist <= 0, 'TRUNCATE discord_users_permissons;',
+                'select \'Skipped Table Flush\' status');
+set @query2 = IF(@exist <= 0, 'alter table discord_users_permissons add uid varchar(128) PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare discord_users_permissons_uid_add1 from @query1;
+EXECUTE discord_users_permissons_uid_add1;
+prepare discord_users_permissons_uid_add2 from @query2;
+EXECUTE discord_users_permissons_uid_add2;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'global_parameters';
+
+set @query = IF(@exist <= 0, 'alter table global_parameters add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare global_parameters_uid_add from @query;
+EXECUTE global_parameters_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'kongou_shows_maps';
+
+set @query = IF(@exist <= 0, 'alter table kongou_shows_maps add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare kongou_shows_maps_uid_add from @query;
+EXECUTE kongou_shows_maps_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'seqran_channels';
+
+set @query = IF(@exist <= 0, 'alter table seqran_channels add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare seqran_channels_uid_add from @query;
+EXECUTE seqran_channels_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'seqran_quotes';
+
+set @query = IF(@exist <= 0, 'alter table seqran_quotes add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare seqran_quotes_uid_add from @query;
+EXECUTE seqran_quotes_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_album_items';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_album_items add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_album_items_uid_add from @query;
+EXECUTE sequenzia_album_items_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_artists_favorites';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_artists_favorites add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_artists_favorites_uid_add from @query;
+EXECUTE sequenzia_artists_favorites_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_cds_audit';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_cds_audit add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_cds_audit_uid_add from @query;
+EXECUTE sequenzia_cds_audit_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_custom_channels';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_custom_channels add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_custom_channels_uid_add from @query;
+EXECUTE sequenzia_custom_channels_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_display_history';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_display_history add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_display_history_uid_add from @query;
+EXECUTE sequenzia_display_history_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_favorites';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_favorites add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_favorites_uid_add from @query;
+EXECUTE sequenzia_favorites_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_hidden_channels';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_hidden_channels add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_hidden_channels_uid_add from @query;
+EXECUTE sequenzia_hidden_channels_uid_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'uid'
+  AND table_name = 'sequenzia_index_custom';
+
+set @query = IF(@exist <= 0, 'alter table sequenzia_index_custom add uid int AUTO_INCREMENT PRIMARY KEY first;',
+                'select \'Column Exists\' status');
+
+prepare sequenzia_index_custom_uid_add from @query;
+EXECUTE sequenzia_index_custom_uid_add;
