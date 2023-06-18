@@ -631,6 +631,18 @@ set @query = IF(@exist <= 0, 'alter table twitter_list add remote_saveid varchar
 
 prepare twitter_list_remote_saveid from @query;
 EXECUTE twitter_list_remote_saveid;
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'system_id'
+  AND table_name = 'twitter_tweet_queue';
+
+set @query = IF(@exist <= 0, 'alter table twitter_tweet_queue add system_id varchar(128) null;',
+                'select \'Column Exists\' status');
+
+prepare twitter_tweet_queue_system_id from @query;
+EXECUTE twitter_tweet_queue_system_id;
 
 create table if not exists sequenzia_cds_audit
 (
