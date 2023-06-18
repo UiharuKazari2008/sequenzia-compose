@@ -845,6 +845,19 @@ SELECT count(*)
 INTO @exist
 FROM information_schema.columns
 WHERE table_schema = database()
+  and COLUMN_NAME = 'hidden'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add hidden tinyint(1) default 0 null after flagged;',
+                'select \'Column Exists\' status');
+
+prepare kanmi_records_hidden_add from @query;
+EXECUTE kanmi_records_hidden_add;
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
   and COLUMN_NAME = 'uid'
   AND table_name = 'sequenzia_index_custom';
 
