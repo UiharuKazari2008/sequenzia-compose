@@ -1,4 +1,4 @@
-FROM node:14-stretch-slim
+FROM node:18-stretch-slim
 
 MAINTAINER Yukimi Kazari <kazari@acr.moe>
 
@@ -19,6 +19,7 @@ ENV REPO_WATCHDOG "https://github.com/UiharuKazari2008/kanmi-watchdog"
 ENV REPO_RANDOMIZER "https://github.com/UiharuKazari2008/sequenzia-random-bot"
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
+ADD https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb /tmp/chrome.deb
 
 # Install Base Packages
 # Make Wait Executable
@@ -31,6 +32,7 @@ COPY honey/* /across/.honey/
 
 RUN apt update && apt install -y git curl wget ffmpeg libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev \
     librsvg2-dev openssl jq make g++ libvips-dev mysql-client par2 && \
+    apt install /tmp/chrome.deb && \
     chmod +x /wait && /usr/bin/split --version && /usr/bin/par2 -V && \
     git clone -b $BRANCH_FRAMEWORK "$REPO_FRAMEWORK" /across/sequenzia-framework && \
     cd /across/sequenzia-framework && npm install && cp -r ../.framework/* ./ && rm -rf ../.framework && \
