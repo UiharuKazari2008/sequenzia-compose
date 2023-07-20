@@ -1,4 +1,4 @@
-FROM node:18-bookworm-slim
+FROM node:18-buster-slim
 
 MAINTAINER Yukimi Kazari <kazari@acr.moe>
 
