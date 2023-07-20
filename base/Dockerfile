@@ -1,4 +1,4 @@
-FROM node:18-buster-slim
+FROM node:18-bookworm-slim
 
 MAINTAINER Yukimi Kazari <kazari@acr.moe>
 
@@ -31,7 +31,7 @@ COPY watchdog/* /across/.watchdog/
 COPY honey/* /across/.honey/
 
 RUN apt update && apt install -y git curl wget ffmpeg libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev \
-    librsvg2-dev openssl jq make g++ libvips-dev mysql-client par2 && \
+    librsvg2-dev openssl jq make g++ libvips-dev mariadb-client par2 && \
     apt install /tmp/chrome.deb && \
     chmod +x /wait && /usr/bin/split --version && /usr/bin/par2 -V && \
     git clone -b $BRANCH_FRAMEWORK "$REPO_FRAMEWORK" /across/sequenzia-framework && \
