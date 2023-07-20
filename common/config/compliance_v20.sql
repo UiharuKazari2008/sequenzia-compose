@@ -853,3 +853,27 @@ set @query = IF(@exist <= 0, 'alter table sequenzia_index_custom add uid int AUT
 
 prepare sequenzia_index_custom_uid_add from @query;
 EXECUTE sequenzia_index_custom_uid_add;
+
+create table if not exists twitter_notify
+(
+    username varchar(256) not null
+        primary key,
+    channel  varchar(128) not null
+);
+
+create table if not exists pixiv_notify
+(
+    id varchar(256) not null
+        primary key,
+    channel  varchar(128) not null
+);
+
+SELECT count(*)
+INTO @exist
+FROM information_schema.columns
+WHERE table_schema = database()
+  and COLUMN_NAME = 'hidden'
+  AND table_name = 'kanmi_records';
+
+set @query = IF(@exist <= 0, 'alter table kanmi_records add hidden tinyint(1) null;',
+                'select \'Column Exists\' status');
