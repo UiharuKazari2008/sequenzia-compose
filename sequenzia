@@ -36,7 +36,7 @@ getServices() {
       cms-spider)
         DFL="${DFL} -f docker-compose-cms-spider.yaml";;
       *)
-        DCL="${DCL} -f docker-compose-${i}.yaml";;
+        DFL="${DFL} -f docker-compose-${i}.yaml";;
     esac
   done
 }
