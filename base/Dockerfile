@@ -6,8 +6,8 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV WAIT_VERSION 2.7.2
 
 # If your running a custom fork, set it here
-ENV BRANCH_FRAMEWORK main
-ENV BRANCH_WEB main
+ENV BRANCH_FRAMEWORK prerelease
+ENV BRANCH_WEB prerelease
 ENV BRANCH_INDEX main
 ENV BRANCH_WATCHDOG master
 ENV BRANCH_RANDOMIZER master
