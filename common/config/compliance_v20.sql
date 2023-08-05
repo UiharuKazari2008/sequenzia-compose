@@ -895,7 +895,7 @@ create table if not exists sequenzia_cie_cache
 (
     id    varchar(255)           not null
         primary key,
-    users json                   null,
+    cache json                   null,
     date  datetime default NOW() null
 );
 
