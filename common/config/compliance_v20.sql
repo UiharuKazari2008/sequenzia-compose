@@ -890,3 +890,12 @@ WHERE table_schema = database()
 
 set @query = IF(@exist <= 0, 'alter table kanmi_records add hidden tinyint(1) null;',
                 'select \'Column Exists\' status');
+
+create table if not exists sequenzia_cie_cache
+(
+    id    varchar(255)           not null
+        primary key,
+    users json                   null,
+    date  datetime default NOW() null
+);
+
