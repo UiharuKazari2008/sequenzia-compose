@@ -108,6 +108,7 @@ services:
       - persistent_data:/across/sequenzia-web/data
       - ./common/config/user-config.json:/across/user-config.json:ro
       - ./common/data/:/data/
+      - ./common/config/public/:/across/sequenzia-web/custom/:ro
     restart: on-failure
     logging:
       options:
