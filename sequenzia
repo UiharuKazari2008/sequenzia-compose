@@ -119,7 +119,7 @@ then
 		env) nano common/config/user-config.env ;;
 		setupaw) nano common/config/setup-authware.env ;;
 		status) docker compose ${ALL_DFL} ps;;
-		logs) docker compose ${ALL_DFL} logs $2 -f;;
+		logs) docker compose ${ALL_DFL} --tail 50 logs $2 -f;;
     certs)
       if [ -n "$2" ]
       then
