@@ -9,6 +9,8 @@ services:
       kanmi_system:
         aliases:
           - twitter.cms.kanmi.acr
+    ports:
+      - 9222:9222
     volumes:
       - persistent_data:/across/sequenzia-framework/data
       - ./common/config/user-config.json:/across/user-config.json:ro
