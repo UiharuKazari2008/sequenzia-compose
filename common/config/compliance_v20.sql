@@ -899,3 +899,12 @@ create table if not exists sequenzia_cie_cache
     date  datetime default NOW() null
 );
 
+create table if not exists kanmi_cdn
+(
+    ecid    int auto_increment
+        primary key,
+    eid     int               not null,
+    cid     varchar(128)      not null,
+    host    int               not null,
+    refresh tinyint default 0 not null
+);

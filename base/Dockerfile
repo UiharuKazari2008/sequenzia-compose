@@ -31,7 +31,7 @@ COPY watchdog/* /across/.watchdog/
 COPY honey/* /across/.honey/
 
 RUN apt update && apt install -y git curl wget ffmpeg libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev \
-    librsvg2-dev openssl jq make g++ libvips-dev mariadb-client par2 && \
+    librsvg2-dev openssl jq make g++ libvips-dev mariadb-client par2 socat && \
     apt install -y /tmp/chrome.deb && \
     chmod +x /wait && /usr/bin/split --version && /usr/bin/par2 -V && \
     git clone -b $BRANCH_FRAMEWORK "$REPO_FRAMEWORK" /across/sequenzia-framework && \
